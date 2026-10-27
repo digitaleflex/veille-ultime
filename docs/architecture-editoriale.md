@@ -7,6 +7,12 @@
 - **Next.js** : pages publiques, formulaire d'édition et interfaces de validation.
 - **GitHub Actions** : planification de collecte et de génération de brouillons; ne pas dépendre des visites du site.
 
+## Administration éditoriale
+
+La page `/admin` permet d'ouvrir une session à l'aide de `VEILLE_ADMIN_PASSWORD` et d'enregistrer un brouillon Markdown. La session est un cookie HTTP-only signé par `VEILLE_ADMIN_SESSION_SECRET`. Ces secrets doivent exister dans l'environnement d'hébergement et ne doivent jamais être committés. Une session dure huit heures. Avant une mise en production plus large, ajouter une protection contre les tentatives répétées et, si plusieurs éditeurs sont prévus, une gestion des comptes individuels.
+
+Le formulaire vérifie les champs, la catégorie, les tags et au moins une URL de référence. Il enregistre les articles avec le statut `DRAFT`; aucune publication publique automatique n'est déclenchée.
+
 ## Sources et confiance
 
 Le catalogue de `src/config/source-catalog.ts` contient des pages canoniques et des métadonnées, pas une garantie que chaque page expose un flux ou une API exploitable. Les URLs de flux (`feedUrl`) doivent être ajoutées uniquement après vérification. Chaque connecteur doit parser explicitement son format et conserver l'URL précise de chaque élément collecté.
