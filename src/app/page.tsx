@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, AudioLines, Bot, Boxes, Braces, Clock3, ExternalLink, Fingerprint, Globe2, RadioTower, ShieldAlert, ShieldCheck, Sparkles, Terminal, Zap } from "lucide-react";
+import { ArrowDownRight, ArrowRight, AudioLines, Bot, Boxes, Braces, Clock3, ExternalLink, Globe2, RadioTower, ShieldAlert, ShieldCheck, Sparkles, Terminal } from "lucide-react";
 
 const categories = [
   { icon: ShieldCheck, title: "Cybersécurité", copy: "Menaces, incidents, défense et renseignement.", href: "/cybersecurite" },
