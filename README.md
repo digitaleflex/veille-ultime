@@ -2,21 +2,17 @@
 
 Plateforme de veille technologique et cybersécurité : actualités sourcées, suivi des vulnérabilités, analyses et bilans quotidiens, hebdomadaires et mensuels.
 
-## Stack de départ
+## Stack
 
 - Next.js App Router + TypeScript
 - Tailwind CSS v4
 - PostgreSQL (Neon) + Prisma 6
 - Vercel pour l'hébergement web
-- GitHub Actions pour les tâches planifiées (à ajouter après configuration des sources)
-
-## Prérequis
-
-- Node.js 20.9+
-- pnpm
-- Une base PostgreSQL Neon (facultative pour afficher la maquette initiale)
+- GitHub Actions pour contrôles qualité et futures tâches planifiées
 
 ## Démarrer en local
+
+Prérequis : Node.js 20.9+ et pnpm.
 
 ```bash
 pnpm install
@@ -26,18 +22,22 @@ pnpm dev
 
 Ouvre http://localhost:3000.
 
-Pour préparer le client Prisma et synchroniser le schéma avec Neon :
+Pour générer Prisma et synchroniser le schéma avec Neon :
 
 ```bash
 pnpm db:generate
 pnpm db:push
 ```
 
-Renseigne `DATABASE_URL` et `DIRECT_URL` dans `.env.local` avant ces commandes. Ne commite jamais les secrets.
+Renseigne `DATABASE_URL` et `DIRECT_URL` dans `.env.local` avant ces commandes. Ne commite jamais les secrets. La base est facultative pour afficher la maquette initiale.
 
 ## État actuel
 
-La première version contient une page d'accueil de démarrage, le système de styles global et le schéma de données initial. Les cartes d'actualité sont des placeholders éditoriaux et ne représentent pas des événements réels. Aucune collecte automatique, authentification d'administration, génération de rapports, ni connexion Neon n'est activée à ce stade.
+L'interface d'accueil et les pages de rubriques sont initialisées. Les pages expliquent le cadre éditorial mais ne présentent pas de flux d'actualités réel. Le schéma Prisma est préparé, mais Neon n'est pas connecté. La collecte automatique, l'authentification d'administration, les bilans automatisés et les tests de build doivent encore être configurés et vérifiés.
+
+## Rubriques
+
+Accueil, actualités, cybersécurité, vulnérabilités, développement, cloud & DevOps, IA, open source, industrie tech, bilans, sources et méthodologie.
 
 ## Principes éditoriaux
 
@@ -47,9 +47,3 @@ La première version contient une page d'accueil de démarrage, le système de s
 - Dédupliquer les contenus et conserver les journaux de collecte.
 - Passer les alertes de sécurité par une validation éditoriale avant publication.
 - Distinguer explicitement les faits sourcés de l'analyse.
-
-## Routes prévues
-
-`/`, `/actualites`, `/actualites/[slug]`, `/cybersecurite`, `/vulnerabilites`, `/developpement`, `/cloud-devops`, `/intelligence-artificielle`, `/open-source`, `/industrie-tech`, `/bilans`, `/sources`, `/methodologie`, `/admin`.
-
-Les rubriques listées sont la cible de l'architecture ; seules les routes dont les fichiers existent sont actives.
