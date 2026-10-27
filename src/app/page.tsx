@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowDownRight, ArrowRight, AudioLines, Bot, Boxes, Braces, Clock3, ExternalLink, Globe2, RadioTower, ShieldAlert, ShieldCheck, Sparkles, Terminal } from "lucide-react";
+import { editorialArticles } from "@/lib/editorial-content";
 
 const categories = [
   { icon: ShieldCheck, title: "Cybersécurité", copy: "Menaces, incidents, défense et renseignement.", href: "/cybersecurite" },
@@ -12,11 +13,14 @@ const categories = [
   { icon: AudioLines, title: "Bilans & analyses", copy: "Synthèses quotidiennes, hebdomadaires et mensuelles.", href: "/bilans" },
 ];
 
-const latest = [
-  { time: "À CONFIGURER", category: "Sources officielles", title: "Les flux de veille seront affichés ici après connexion des sources", description: "Aucun événement n'est présenté comme une actualité réelle tant que la collecte n'est pas activée.", label: "À venir", kind: "watch" },
-  { time: "À CONFIGURER", category: "Vulnérabilités", title: "Suivi CVE, avis éditeurs et vulnérabilités exploitées", description: "Les identifiants, versions affectées et statuts d'exploitation devront être reliés à des références vérifiables.", label: "À venir", kind: "high" },
-  { time: "À CONFIGURER", category: "Développement", title: "Sorties logicielles, correctifs et changements majeurs", description: "Les publications seront dédupliquées et horodatées avant toute synthèse éditoriale.", label: "À venir", kind: "watch" },
-];
+const latest = editorialArticles.slice(0, 3).map((article) => ({
+  time: new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+  category: article.category,
+  title: article.title,
+  description: article.excerpt,
+  label: "Sourcé",
+  kind: "watch",
+}));
 
 export default function Home() {
   return (
@@ -80,7 +84,7 @@ export default function Home() {
               <div className="report-card"><span className="pill"><Clock3 size={11} style={{ display: "inline", marginRight: 5 }} /> À venir</span><h3>Des synthèses utiles pour décider.</h3><p>Les rapports seront générés à partir des articles vérifiés de la période, avec liens vers les sources et méthode de classement explicitée.</p><div className="report-line"><span>Brief quotidien</span><span>À configurer</span></div><div className="report-line"><span>Récapitulatif hebdomadaire</span><span>À configurer</span></div><div className="report-line"><span>Bilan mensuel</span><span>À configurer</span></div><Link href="/bilans" className="button-secondary" style={{ marginTop: 12 }}>Découvrir les bilans <ArrowRight size={13} /></Link></div>
             </aside>
           </div>
-          <div className="disclaimer"><strong style={{ color: "#c5f441" }}>État du projet — </strong>interface de démarrage. Les éléments de cette page décrivent la structure éditoriale prévue, pas un flux d’actualités opérationnel. La collecte automatique, la base de données et la validation éditoriale restent à connecter.</div>
+          <div className="disclaimer"><strong style={{ color: "#c5f441" }}>État du projet — </strong>première sélection éditoriale publiée à partir de sources identifiées. La collecte automatique, la connexion à la base de données et le processus de validation éditoriale restent à finaliser.</div>
         </section>
       </main>
       <footer className="footer"><div className="container footer-inner"><Link href="/" className="brand"><span className="brand-mark">V.</span><span>VEILLE <em>ULTIME</em></span></Link><span>Une information sourcée. Une analyse explicite. Pas de faits inventés.</span><Link href="/methodologie" className="text-link">Lire la méthodologie <ExternalLink size={11} style={{ display: "inline" }} /></Link></div></footer>
