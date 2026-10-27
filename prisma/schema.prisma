@@ -30,53 +30,77 @@ enum Severity {
   UNKNOWN
 }
 
+enum SourceKind {
+  RSS
+  API
+  WEB
+  ADVISORY
+  CHANGELOG
+}
+
 model Source {
-  id              String        @id @default(cuid())
-  name            String
-  url             String        @unique
-  kind            String        @default("RSS")
-  trustLevel      Int           @default(3)
-  enabled         Boolean       @default(true)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  articleSources  ArticleSource[]
-  feedItems       FeedItem[]
+  id                     String        @id @default(cuid())
+  name                   String
+  url                    String        @unique
+  feedUrl                String?
+  kind                   SourceKind    @default(RSS)
+  parserKey              String?
+  description            String?       @db.Text
+  topics                 String[]      @default([])
+  language               String        @default("en")
+  trustLevel             Int           @default(3)
+  isOfficial             Boolean       @default(false)
+  enabled                Boolean       @default(true)
+  fetchIntervalMinutes   Int           @default(360)
+  lastFetchedAt          DateTime?
+  lastSuccessAt          DateTime?
+  consecutiveFailures    Int           @default(0)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  articleSources         ArticleSource[]
+  feedItems              FeedItem[]
+  @@index([enabled, lastFetchedAt])
+  @@index([trustLevel, isOfficial])
 }
 
 model FeedItem {
-  id                 String    @id @default(cuid())
-  sourceId           String
-  source             Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  externalId         String?
-  url                String    @unique
-  title              String
-  rawSummary         String?   @db.Text
-  publishedAt        DateTime?
-  collectedAt        DateTime  @default(now())
-  fingerprint        String?   @unique
-  processedAt        DateTime?
+  id           String    @id @default(cuid())
+  sourceId     String
+  source       Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  externalId   String?
+  url          String    @unique
+  title        String
+  rawSummary   String?   @db.Text
+  rawContent   String?   @db.Text
+  publishedAt  DateTime?
+  collectedAt  DateTime  @default(now())
+  fingerprint  String?   @unique
+  processedAt  DateTime?
   @@index([publishedAt])
   @@index([sourceId, collectedAt])
 }
 
 model Article {
-  id              String           @id @default(cuid())
-  slug            String           @unique
-  title           String
-  excerpt         String           @db.VarChar(500)
-  content         String           @db.Text
-  category        String
-  status          EditorialStatus  @default(DRAFT)
-  publishedAt     DateTime?
+  id                String           @id @default(cuid())
+  slug              String           @unique
+  title             String
+  excerpt           String           @db.VarChar(500)
+  content           String           @db.Text
+  category          String
+  tags              String[]         @default([])
+  status            EditorialStatus  @default(DRAFT)
+  publishedAt       DateTime?
   sourcePublishedAt DateTime?
-  readingMinutes  Int              @default(3)
-  featured        Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  sources         ArticleSource[]
-  vulnerability   Vulnerability?
+  lastVerifiedAt    DateTime?
+  readingMinutes    Int              @default(3)
+  featured          Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  sources           ArticleSource[]
+  vulnerability     Vulnerability?
   @@index([status, publishedAt])
   @@index([category, publishedAt])
+  @@index([lastVerifiedAt])
 }
 
 model ArticleSource {
@@ -87,41 +111,42 @@ model ArticleSource {
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
   source    Source  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   @@id([articleId, sourceId])
+  @@index([sourceId])
 }
 
 model Vulnerability {
-  id                String    @id @default(cuid())
-  identifier        String    @unique
-  articleId         String?   @unique
-  article           Article?  @relation(fields: [articleId], references: [id], onDelete: SetNull)
-  severity          Severity  @default(UNKNOWN)
-  cvssScore         Float?
-  summary           String    @db.Text
-  affectedProducts  Json?
-  fixedVersions     Json?
-  exploitedInWild   Boolean?
-  publishedAt       DateTime?
-  lastVerifiedAt    DateTime?
-  advisoryUrl       String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  identifier       String    @unique
+  articleId        String?   @unique
+  article          Article?  @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  severity         Severity  @default(UNKNOWN)
+  cvssScore        Float?
+  summary          String    @db.Text
+  affectedProducts Json?
+  fixedVersions    Json?
+  exploitedInWild  Boolean?
+  publishedAt      DateTime?
+  lastVerifiedAt   DateTime?
+  advisoryUrl      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   @@index([severity, publishedAt])
   @@index([exploitedInWild])
 }
 
 model Report {
-  id          String     @id @default(cuid())
-  slug        String     @unique
+  id          String         @id @default(cuid())
+  slug        String         @unique
   title       String
   type        ReportType
   periodStart DateTime
   periodEnd   DateTime
-  summary     String     @db.Text
-  content     String     @db.Text
+  summary     String         @db.Text
+  content     String         @db.Text
   status      EditorialStatus @default(DRAFT)
   publishedAt DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   @@index([type, periodStart])
 }
 
