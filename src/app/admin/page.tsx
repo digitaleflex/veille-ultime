@@ -65,7 +65,7 @@ export default function AdminPage() {
         <p style={{ color: "#a1a1aa", fontSize: 13, lineHeight: 1.6 }}>Minimum une référence HTTP(S). Le brouillon ne sera pas publié automatiquement.</p>
         <button disabled={saving} style={{ marginTop: 20, background: "#c5f441", color: "#09090b", border: 0, borderRadius: 8, padding: "12px 18px", fontWeight: 700, cursor: "pointer" }}>{saving ? "Enregistrement…" : "Enregistrer le brouillon"}</button>
       </form>}
-      {message && <p role="status" style={{ marginTop: 20, padding: 14, border: "1px solid #33333a", borderRadius: 8, color: "#e4e4e7" }}>{message}{createdSlug && <> <Link href={"/actualites/" + createdSlug} style={{ color: "#c5f441" }}>Voir l’article</Link></>}</p>}
+      {message && <p role="status" style={{ marginTop: 20, padding: 14, border: "1px solid #33333a", borderRadius: 8, color: "#e4e4e7" }}>{message}{createdSlug && <span style={{ display: "block", marginTop: 8, color: "#a1a1aa", fontSize: 13 }}>Identifiant du brouillon : {createdSlug}</span>}</p>}
       <p style={{ color: "#71717a", fontSize: 12, marginTop: 42 }}>Accès protégé par secret serveur et cookie de session HTTP-only. Configure VEILLE_ADMIN_PASSWORD et VEILLE_ADMIN_SESSION_SECRET dans l’environnement de déploiement.</p>
     </div>
   </main>;
