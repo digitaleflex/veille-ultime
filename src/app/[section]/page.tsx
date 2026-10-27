@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, ShieldAlert } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ShieldAlert, ExternalLink } from "lucide-react";
+import { editorialArticles } from "@/lib/editorial-content";
 
 const sections: Record<string, { title: string; eyebrow: string; intro: string; focus: string[] }> = {
   actualites: { title: "Actualités", eyebrow: "Le fil de veille", intro: "Les informations technologiques seront publiées ici après collecte, déduplication et vérification éditoriale.", focus: ["Sources et dates de publication conservées", "Résumé factuel et contexte séparés", "Liens directs vers les références originales"] },
@@ -24,6 +25,26 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   const { section } = await params;
   const data = sections[section];
   if (!data) notFound();
+
+  if (section === "actualites") {
+    return (
+      <main className="container" style={{ paddingTop: 56, paddingBottom: 80, minHeight: "70vh" }}>
+        <Link href="/" className="text-link" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 34 }}><ArrowLeft size={14} /> Retour à l’accueil</Link>
+        <div className="section-kicker">Sélection éditoriale · 1–27 octobre 2026</div>
+        <h1 style={{ fontSize: "clamp(2.6rem, 7vw, 5.5rem)", lineHeight: 1, letterSpacing: "-.06em", margin: "14px 0 22px", maxWidth: 900 }}>Actualités<span style={{ color: "#c5f441" }}>.</span></h1>
+        <p style={{ color: "var(--muted, #a1a1aa)", fontSize: 18, lineHeight: 1.8, maxWidth: 760 }}>Une première sélection d’actualités technologiques et cyber documentées entre le 1er et le 27 octobre 2026. Chaque fiche résume les faits et renvoie vers sa source originale. Cette sélection n’est pas exhaustive.</p>
+        <div className="article-list" style={{ marginTop: 38 }}>
+          {editorialArticles.map((article) => (
+            <article className="article-row" key={article.slug}>
+              <div className="article-time">{new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</div>
+              <div><div className="meta"><span className="category">{article.category}</span><span>{article.readingMinutes} min de lecture</span></div><h3><Link href={"/actualites/" + article.slug} className="article-title-link">{article.title}</Link></h3><p>{article.excerpt}</p><a href={article.sourceUrl} target="_blank" rel="noreferrer" className="text-link" style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 9 }}>Source : {article.sourceName} <ExternalLink size={12} /></a></div>
+            </article>
+          ))}
+        </div>
+        <div className="disclaimer" style={{ marginTop: 34 }}><strong style={{ color: "#c5f441" }}>Note éditoriale — </strong>les dates correspondent aux publications des sources, pas nécessairement à la date de découverte des événements. Les informations de sécurité doivent être revérifiées avant toute décision opérationnelle.</div>
+      </main>
+    );
+  }
 
   return (
     <main className="container" style={{ paddingTop: 56, paddingBottom: 80, minHeight: "70vh" }}>
