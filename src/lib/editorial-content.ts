@@ -9,6 +9,9 @@ export type EditorialArticle = {
   readingMinutes: number;
   takeaways: string[];
   body: string[];
+  seoTitle?: string;
+  seoDescription?: string;
+  keywords?: string;
 };
 
 const legacyArticles: EditorialArticle[] = [
@@ -216,6 +219,9 @@ function parseMarkdownArticle(fileName: string): EditorialArticle | null {
     sourceName: metadata.sourceName as string,
     sourceUrl: metadata.sourceUrl as string,
     excerpt: metadata.excerpt as string,
+    seoTitle: typeof metadata.seoTitle === "string" ? metadata.seoTitle : undefined,
+    seoDescription: typeof metadata.seoDescription === "string" ? metadata.seoDescription : undefined,
+    keywords: typeof metadata.keywords === "string" ? metadata.keywords : undefined,
     readingMinutes: Math.max(1, Math.ceil(wordCount / 200)),
     takeaways,
     body,

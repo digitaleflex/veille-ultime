@@ -2,6 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { editorialArticles, getArticleBySlug } from "@/lib/editorial-content";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+ const { slug } = await params;
+ const article = getArticleBySlug(slug);
+ if (!article) return { title: "Article introuvable | Veille Ultime" };
+ const title = article.seoTitle || article.title;
+ const description = article.seoDescription || article.excerpt;
+ const url = `https://veille-ultime.vercel.app/actualites/${article.slug}`;
+ return { title, description, keywords: article.keywords ? article.keywords.split(",").map((keyword) => keyword.trim()) : undefined, alternates: { canonical: url }, openGraph: { type: "article", title, description, url, publishedTime: article.publishedAt, siteName: "Veille Ultime", locale: "fr_FR" }, twitter: { card: "summary", title, description } };
+}
 
 export function generateStaticParams() {
   return editorialArticles.map(({ slug }) => ({ slug }));
