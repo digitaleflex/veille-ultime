@@ -1,43 +1,50 @@
 ---
 slug: "github-copilot-authentification-serveur-a-serveur-apps-octobre-2026"
-title: "GitHub Copilot prend en charge l’authentification serveur à serveur"
-seoTitle: "GitHub Copilot prend en charge l’authentification serve…"
-seoDescription: "GitHub annonce l’authentification serveur à serveur pour certaines GitHub Apps utilisant le Copilot SDK, en préversion publique."
-keywords: "GitHub Copilot SDK, GitHub Apps, authentification serveur à serveur"
+title: "GitHub Copilot SDK : l’authentification serveur à serveur arrive en aperçu public"
+seoTitle: "GitHub Copilot SDK : authentification serveur à serveur"
+seoDescription: "GitHub annonce l’authentification serveur à serveur pour certaines GitHub Apps utilisant Copilot SDK. Vérifier l’accès, les identités et les permissions avant l’intégration."
+keywords: "GitHub Copilot SDK, GitHub Apps, authentification serveur à serveur, agents IA, sécurité"
 category: "Développement & IA"
 publishedAt: "2026-10-27"
 sourceName: "GitHub Changelog"
 sourceUrl: "https://github.blog/changelog/month/10-2026/"
-excerpt: "GitHub annonce l’authentification serveur à serveur pour certaines GitHub Apps utilisant le Copilot SDK, en préversion publique."
+excerpt: "L’authentification serveur à serveur facilite l’intégration de Copilot SDK dans des services et agents, mais impose une gestion stricte des identités et des permissions."
 takeaways:
-  - "utiliser une GitHub App dédiée, avec permissions minimales et secrets protégés"
-  - "Vérifier les faits, les versions et les recommandations dans la source primaire."
+  - "Confirmer le statut d’aperçu public et les conditions de disponibilité auprès de GitHub."
+  - "Utiliser une identité dédiée avec des permissions limitées à l’application."
+  - "Ne jamais réutiliser un jeton personnel dans un service de production."
 ---
 
-## Ce qu’il faut savoir
+## L’annonce
 
-GitHub annonce l’authentification serveur à serveur pour certaines GitHub Apps utilisant le Copilot SDK, en préversion publique. La référence principale est **GitHub Changelog**. Les versions et conditions de disponibilité peuvent évoluer; vérifiez la publication originale avant toute décision opérationnelle.
+Le changelog GitHub d’octobre 2026 annonce la prise en charge de l’authentification serveur à serveur pour des GitHub Apps utilisant le Copilot SDK, en aperçu public. Cette capacité vise les services et agents qui doivent effectuer des requêtes sans dépendre d’une session interactive d’un développeur.
 
-## Pourquoi c’est important
+L’annonce générale du mois fournit le contexte, mais les détails d’éligibilité, les permissions prises en charge et les étapes de configuration doivent être vérifiés dans la publication spécifique et la documentation du SDK avant toute mise en production.
 
-Le point central est authentification applicative pour services et agents via Copilot SDK. L’enjeu consiste à identifier les systèmes ou processus concernés et à traduire l’information en une décision vérifiable. Une annonce ne prouve pas à elle seule qu’un environnement particulier est affecté : l’inventaire local et la documentation technique restent nécessaires.
+## Pourquoi le modèle d’identité compte
 
-## Actions recommandées
+Une authentification non interactive est utile pour un service qui fonctionne en arrière-plan, mais elle concentre les risques dans les identifiants et permissions de l’application. Un jeton trop puissant ou partagé entre plusieurs services peut transformer une compromission limitée en accès étendu.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre : versions, services, dépôts ou intégrations concernés.
-- Appliquer la mesure adaptée : utiliser une GitHub App dédiée, avec permissions minimales et secrets protégés.
-- Tester avant généralisation et prévoir un retour arrière pour les changements à risque.
-- Conserver une trace de la décision et des vérifications.
+Séparez les identités selon l’application et l’environnement. Le service de test ne doit pas utiliser les mêmes permissions ni les mêmes secrets que le service de production.
 
-## Limites et points de vigilance
+## Checklist d’intégration
 
-Les annonces d’un éditeur décrivent son produit ou ses recommandations; elles ne constituent pas nécessairement une évaluation indépendante. Évitez de conclure à une compromission ou à une absence de risque sans éléments vérifiables.
+1. Vérifier que le compte, le plan et la GitHub App sont éligibles à la fonctionnalité.
+2. Créer une identité dédiée et lui accorder uniquement les permissions indispensables.
+3. Stocker les identifiants dans un gestionnaire de secrets et définir une procédure de rotation.
+4. Ne pas placer les secrets dans le code, les images de conteneurs, les prompts ou les logs.
+5. Définir des limites de débit, des timeouts et un traitement explicite des erreurs d’authentification.
+6. Journaliser les actions de l’application et surveiller les changements de permissions.
+7. Tester la révocation de l’accès et la récupération après expiration ou rotation d’un identifiant.
 
-## Conclusion
+## Contrôles de gouvernance
 
-Reliez une source fiable à un contrôle concret et mesurable. Vérifiez l’effet de la mesure après sa mise en œuvre.
+Documentez le propriétaire, les ressources accessibles, le besoin métier, les données traitées et la procédure de désactivation. Toute extension de permission doit faire l’objet d’une revue. Si le service utilise un agent capable d’appeler des outils, distinguez clairement les droits d’authentification de l’application et les autorisations des actions demandées par le modèle.
+
+## À retenir
+
+L’authentification serveur à serveur permet des intégrations non interactives, mais la commodité ne doit pas élargir les droits. L’approche recommandée reste une identité dédiée, des permissions minimales, des secrets protégés et une révocation testée.
 
 ## Source primaire
 
-Consultez [GitHub Changelog](https://github.blog/changelog/month/10-2026/) pour les détails et mises à jour.
+[GitHub Changelog — annonces d’octobre 2026](https://github.blog/changelog/month/10-2026/)
