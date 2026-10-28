@@ -16,7 +16,7 @@ takeaways:
 
 ## Ce qu’il faut savoir
 
-Les pipelines CI/CD accèdent au code, aux artefacts et parfois à la production. Permissions minimales et protection des secrets sont prioritaires. La référence principale est **GitHub — documentation de sécurité**. Les détails et recommandations doivent être vérifiés dans la documentation originale avant toute décision.
+Les pipelines CI/CD accèdent au code, aux artefacts et parfois à la production. Permissions minimales et protection des secrets sont prioritaires. La référence principale est **GitHub — documentation de sécurité**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
 
 ## Pourquoi c’est important
 
@@ -32,7 +32,7 @@ Le point central est contrôles de sécurité du cycle de développement. Les é
 
 ## Points de vigilance
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations à votre contexte, et vérifiez leur effet après mise en œuvre.
+Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
 
 ## Conclusion
 

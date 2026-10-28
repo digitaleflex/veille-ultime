@@ -16,7 +16,7 @@ takeaways:
 
 ## Ce qu’il faut savoir
 
-Une sauvegarde non testée peut être inutilisable pendant un incident. Protégez les copies et répétez les restaurations. La référence principale est **CISA — Stop Ransomware**. Les détails et recommandations doivent être vérifiés dans la documentation originale avant toute décision.
+Une sauvegarde non testée peut être inutilisable pendant un incident. Protégez les copies et répétez les restaurations. La référence principale est **CISA — Stop Ransomware**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
 
 ## Pourquoi c’est important
 
@@ -32,7 +32,7 @@ Le point central est bonnes pratiques de sauvegarde contre les rançongiciels. L
 
 ## Points de vigilance
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations à votre contexte, et vérifiez leur effet après mise en œuvre.
+Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
 
 ## Conclusion
 

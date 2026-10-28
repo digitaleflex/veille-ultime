@@ -16,7 +16,7 @@ takeaways:
 
 ## Ce qu’il faut savoir
 
-Un inventaire des composants aide à identifier les applications concernées lorsqu’une vulnérabilité est annoncée. La référence principale est **CISA — ressources de cybersécurité**. Les détails et recommandations doivent être vérifiés dans la documentation originale avant toute décision.
+Un inventaire des composants aide à identifier les applications concernées lorsqu’une vulnérabilité est annoncée. La référence principale est **CISA — ressources de cybersécurité**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
 
 ## Pourquoi c’est important
 
@@ -32,7 +32,7 @@ Le point central est une SBOM liée aux versions réellement déployées. Les é
 
 ## Points de vigilance
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations à votre contexte, et vérifiez leur effet après mise en œuvre.
+Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
 
 ## Conclusion
 
