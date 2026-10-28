@@ -7,7 +7,7 @@ keywords: "GitHub Copilot SDK, GitHub Apps, authentification serveur à serveur,
 category: "Développement & IA"
 publishedAt: "2026-10-27"
 sourceName: "GitHub Changelog"
-sourceUrl: "https://github.blog/changelog/month/10-2026/"
+sourceUrl: "https://github.blog/changelog/2026-10-27-github-copilot-supports-server-to-server-authentication/"
 excerpt: "L’authentification serveur à serveur facilite l’intégration de Copilot SDK dans des services et agents, mais impose une gestion stricte des identités et des permissions."
 takeaways:
   - "Confirmer le statut d’aperçu public et les conditions de disponibilité auprès de GitHub."
@@ -47,4 +47,4 @@ L’authentification serveur à serveur permet des intégrations non interactive
 
 ## Source primaire
 
-[GitHub Changelog — annonces d’octobre 2026](https://github.blog/changelog/month/10-2026/)
+[GitHub Changelog — annonces d’octobre 2026](https://github.blog/changelog/2026-10-27-github-copilot-supports-server-to-server-authentication/)
