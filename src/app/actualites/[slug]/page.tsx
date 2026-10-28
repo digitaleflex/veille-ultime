@@ -10,7 +10,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
  if (!article) return { title: "Article introuvable | Veille Ultime" };
  const title = article.seoTitle || article.title;
  const description = article.seoDescription || article.excerpt;
- const url = `https://veille-ultime.vercel.app/actualites/${article.slug}`;
+ const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://veille-ultime.vercel.app").replace(/\/$/, "");
+ const url = `${baseUrl}/actualites/${article.slug}`;
  return { title, description, keywords: article.keywords ? article.keywords.split(",").map((keyword) => keyword.trim()) : undefined, alternates: { canonical: url }, openGraph: { type: "article", title, description, url, publishedTime: article.publishedAt, siteName: "Veille Ultime", locale: "fr_FR" }, twitter: { card: "summary", title, description } };
 }
 
@@ -24,7 +25,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   if (!article) notFound();
 
   return (
-    <main className="container" style={{ paddingTop: 48, paddingBottom: 80, minHeight: "70vh", maxWidth: 980 }}>
+    <main className="container" style={{ paddingTop: 48, paddingBottom: 80, minHeight: "70vh", maxWidth: 980 }}>\n      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
       <Link href="/actualites" className="text-link" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 34 }}><ArrowLeft size={14} /> Toutes les actualités</Link>
       <div className="section-kicker">{article.category} · {new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</div>
       <h1 style={{ fontSize: "clamp(2.2rem, 5vw, 4.5rem)", lineHeight: 1.08, letterSpacing: "-.045em", margin: "16px 0 24px", maxWidth: 900 }}>{article.title}<span style={{ color: "#c5f441" }}>.</span></h1>
