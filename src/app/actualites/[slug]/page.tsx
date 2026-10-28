@@ -33,7 +33,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <article style={{ maxWidth: 780, marginTop: 40 }}>
         {article.body.map((block, index) => {
           if (block.startsWith("## ")) return <h2 key={index} style={{ fontSize: 25, lineHeight: 1.3, margin: "30px 0 14px" }}>{block.slice(3)}</h2>;
-          if (block.split("\\n").every((line) => line.startsWith("- "))) return <ul key={index} style={{ paddingLeft: 22, color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{block.split("\\n").map((line) => <li key={line}>{line.slice(2)}</li>)}</ul>;
+          if (block.split("\n").every((line) => line.startsWith("- "))) return <ul key={index} style={{ paddingLeft: 22, color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{block.split("\n").map((line) => <li key={line}>{line.slice(2)}</li>)}</ul>;
           const parts = block.split(/(\\[[^\\]]+\\]\\(https?:\\/\\/[^)]+\\))/g);
           return <p key={index} style={{ color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{parts.map((part, partIndex) => { const link = part.match(/^\\[([^\\]]+)\\]\\((https?:\\/\\/[^)]+)\\)$/); return link ? <a key={partIndex} href={link[2]} target="_blank" rel="noreferrer" className="text-link">{link[1]}</a> : part; })}</p>;
         })}
