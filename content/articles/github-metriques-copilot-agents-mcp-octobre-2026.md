@@ -7,7 +7,7 @@ keywords: "GitHub Copilot métriques, OpenCode, MCP, agents IA, observabilité I
 category: "Intelligence artificielle"
 publishedAt: "2026-10-23"
 sourceName: "GitHub Changelog"
-sourceUrl: "https://github.blog/changelog/month/10-2026/"
+sourceUrl: "https://github.blog/changelog/2026-10-23-usage-metrics-api-adds-usage-from-tools-like-opencode/"
 excerpt: "Une meilleure couverture des métriques Copilot peut rendre l’usage des outils plus visible, mais le volume d’activité ne mesure ni la qualité du code ni le gain de productivité."
 takeaways:
   - "Vérifier quels clients et outils sont effectivement inclus dans les rapports."
