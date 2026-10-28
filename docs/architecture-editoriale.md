@@ -1,42 +1,48 @@
 # Architecture éditoriale — Veille Ultime
 
-## Principe de séparation
+## Principe
 
-- **Git / code** : catégories autorisées, tags éditoriaux, catalogue déclaratif des sources, connecteurs et règles de validation.
-- **Neon / PostgreSQL** : état opérationnel des sources, éléments collectés, articles Markdown, références précises, vulnérabilités, rapports et journaux de collecte.
-- **Next.js** : pages publiques, formulaire d'édition et interfaces de validation.
-- **GitHub Actions** : planification de collecte et de génération de brouillons; ne pas dépendre des visites du site.
+Veille Ultime est un site **statique-first, sans base de données**. Git est la source de vérité du contenu; Next.js génère les pages et Vercel les déploie à chaque mise à jour de la branche principale.
 
-## Administration éditoriale
+- `content/articles/*.md` : articles publiables, écrits en Markdown avec métadonnées en tête.
+- `src/lib/editorial-content.ts` : chargement des fichiers Markdown et compatibilité temporaire avec les articles historiques.
+- `src/config/source-catalog.ts` : catalogue versionné de sources à consulter. Il s'agit d'un référentiel documentaire, pas d'un collecteur automatique.
+- `src/app/` : pages publiques, navigation et génération des pages statiques.
+- GitHub : historique, revue des modifications et validation éditoriale.
+- Vercel : build et déploiement déclenchés par les commits.
 
-La page `/admin` permet d'ouvrir une session à l'aide de `VEILLE_ADMIN_PASSWORD` et d'enregistrer un brouillon Markdown. La session est un cookie HTTP-only signé par `VEILLE_ADMIN_SESSION_SECRET`. Ces secrets doivent exister dans l'environnement d'hébergement et ne doivent jamais être committés. Une session dure huit heures. Avant une mise en production plus large, ajouter une protection contre les tentatives répétées et, si plusieurs éditeurs sont prévus, une gestion des comptes individuels.
+Aucune base PostgreSQL, Prisma, interface d'administration, clé secrète ou variable de connexion n'est nécessaire pour publier un article.
 
-Le formulaire vérifie les champs, la catégorie, les tags et au moins une URL de référence. Il enregistre les articles avec le statut `DRAFT`; aucune publication publique automatique n'est déclenchée.
+## Ajouter un article
 
-## Sources et confiance
+1. Copier `content/articles/_template.md` vers un nouveau fichier, par exemple `content/articles/nom-de-l-article.md`.
+2. Remplir les métadonnées et le contenu sans inventer les faits manquants.
+3. Utiliser une URL directe vers la publication ou l'avis cité, et non une page d'accueil générique lorsque la référence précise existe.
+4. Vérifier les dates, versions, identifiants CVE, produits affectés et correctifs auprès de la source.
+5. Relire le rendu, puis committer le fichier. Le déploiement Vercel est déclenché par GitHub.
 
-Le catalogue de `src/config/source-catalog.ts` contient des pages canoniques et des métadonnées, pas une garantie que chaque page expose un flux ou une API exploitable. Les URLs de flux (`feedUrl`) doivent être ajoutées uniquement après vérification. Chaque connecteur doit parser explicitement son format et conserver l'URL précise de chaque élément collecté.
+Les fichiers dont le nom commence par `_` sont des modèles et ne sont pas publiés.
 
-Le seed crée les sources avec `enabled=false`. Il faut implémenter et tester un collecteur compatible avant d'activer une source. Les niveaux de confiance sont des priorités éditoriales, pas des scores de vérité absolue. Les publications commerciales, prépublications et annonces éditeur doivent être présentées comme telles et recoupées quand la nature de l'affirmation l'exige.
+## Format Markdown
 
-## Cycle éditorial
+Les champs requis sont `slug`, `title`, `category`, `publishedAt`, `sourceName`, `sourceUrl` et `excerpt`. `takeaways` est une liste YAML simple. Le corps utilise des paragraphes séparés par une ligne vide.
 
-1. Collecter depuis une source activée et enregistrer l'URL, les dates et les données brutes.
-2. Dédupliquer les éléments par URL et empreinte.
-3. Préparer un article Markdown en statut `DRAFT`.
-4. Exiger des références précises et une validation humaine avant publication.
-5. Conserver `lastVerifiedAt` pour les éléments susceptibles d'évoluer.
-6. Générer les rapports quotidiens, hebdomadaires et mensuels uniquement à partir des articles validés.
+## Règles éditoriales
 
-## Mise en place
+- Distinguer les faits vérifiés, les déclarations d'un éditeur et l'analyse.
+- Ne pas présenter une vulnérabilité comme exploitée activement sans preuve citée.
+- Préférer les avis de sécurité, notes de version et publications originales.
+- Indiquer la date de la source et les limites connues; revérifier les informations sensibles avant publication.
+- Ne pas publier de secrets, données personnelles ni détails opérationnels dangereux.
+- Les anciennes fiches restent temporairement dans `src/lib/editorial-content.ts`; migrer ou corriger leurs références au fil des mises à jour.
 
-Après vérification des variables d'environnement dans un environnement privé :
+## Vérifications locales
 
 ```bash
 pnpm install
-pnpm db:generate
-pnpm db:push
-pnpm db:seed
+pnpm lint
+pnpm typecheck
+pnpm build
 ```
 
-Ne jamais committer `.env`, une URL de base de données contenant des identifiants ou des jetons. Le schéma n'est pas appliqué à Neon par un commit Git : la commande `db:push` doit être exécutée depuis un environnement disposant des variables valides.
+Aucune de ces vérifications n'est réputée réussie tant qu'elle n'a pas été exécutée sur le commit concerné.

@@ -11,7 +11,7 @@ export type EditorialArticle = {
   body: string[];
 };
 
-export const editorialArticles: EditorialArticle[] = [
+const legacyArticles: EditorialArticle[] = [
   {
     slug: "php-corrige-deux-vulnerabilites-critiques-rce-21-octobre-2026",
     title: "PHP publie des correctifs pour deux vulnérabilités critiques permettant une exécution de code à distance",
@@ -177,4 +177,68 @@ export const editorialArticles: EditorialArticle[] = [
   }
 ];
 
+
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+function parseMarkdownArticle(fileName: string): EditorialArticle | null {
+  const raw = readFileSync(join(process.cwd(), "content/articles", fileName), "utf8");
+  const match = raw.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*\\r?\\n([\\s\\S]*)$/);
+  if (!match) return null;
+
+  const metadata: Record<string, string | string[]> = {};
+  let currentListKey = "";
+  for (const line of match[1].split(/\\r?\\n/)) {
+    const listItem = line.match(/^\\s+-\\s+(.+)$/);
+    if (listItem && currentListKey) {
+      const value = metadata[currentListKey];
+      if (Array.isArray(value)) value.push(listItem[1].trim().replace(/^["']|["']$/g, ""));
+      continue;
+    }
+    const field = line.match(/^([a-zA-Z][\\w]*):\\s*(.*)$/);
+    if (!field) continue;
+    currentListKey = field[1];
+    const value = field[2].trim();
+    if (!value) metadata[currentListKey] = [];
+    else metadata[currentListKey] = value.replace(/^["']|["']$/g, "");
+  }
+
+  const required = ["slug", "title", "category", "publishedAt", "sourceName", "sourceUrl", "excerpt"];
+  if (required.some((key) => typeof metadata[key] !== "string" || !metadata[key])) return null;
+  const body = match[2].trim().split(/\\r?\\n\\s*\\r?\\n/).map((block) => block.trim()).filter(Boolean);
+  const takeaways = Array.isArray(metadata.takeaways) ? metadata.takeaways : [];
+  const wordCount = match[2].split(/\\s+/).filter(Boolean).length;
+  return {
+    slug: metadata.slug as string,
+    title: metadata.title as string,
+    category: metadata.category as string,
+    publishedAt: metadata.publishedAt as string,
+    sourceName: metadata.sourceName as string,
+    sourceUrl: metadata.sourceUrl as string,
+    excerpt: metadata.excerpt as string,
+    readingMinutes: Math.max(1, Math.ceil(wordCount / 200)),
+    takeaways,
+    body,
+  };
+}
+
+function loadMarkdownArticles(): EditorialArticle[] {
+  const directory = join(process.cwd(), "content/articles");
+  try {
+    return readdirSync(directory)
+      .filter((fileName) => fileName.endsWith(".md") && !fileName.startsWith("_"))
+      .map(parseMarkdownArticle)
+      .filter((article): article is EditorialArticle => article !== null);
+  } catch {
+    return [];
+  }
+}
+
+// Les articles historiques restent compatibles pendant la migration progressive vers Markdown.
+export const editorialArticles: EditorialArticle[] = [
+  ...loadMarkdownArticles(),
+  ...legacyArticles.filter((legacy) => !loadMarkdownArticles().some((article) => article.slug === legacy.slug)),
+].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+
 export const getArticleBySlug = (slug: string) => editorialArticles.find((article) => article.slug === slug);
+
