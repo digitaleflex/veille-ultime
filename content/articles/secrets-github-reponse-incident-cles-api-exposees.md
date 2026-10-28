@@ -1,43 +1,52 @@
 ---
 slug: "secrets-github-reponse-incident-cles-api-exposees"
-title: "Clé API exposée sur GitHub : la procédure de réponse en cinq étapes"
-seoTitle: "Clé API exposée sur GitHub : la procédure de réponse en…"
-seoDescription: "Un secret publié dans un dépôt public exige une réponse rapide : révocation, investigation, nettoyage et prévention."
-keywords: "clé API exposée GitHub, secret leak, rotation token"
+title: "Clé API exposée sur GitHub : les étapes de réponse à incident à suivre immédiatement"
+seoTitle: "Clé API exposée sur GitHub : procédure de réponse à incident"
+seoDescription: "Révoquer un secret exposé, identifier les usages, vérifier les journaux et assainir les dépôts sans confondre suppression du commit et révocation."
+keywords: "secret exposé GitHub, clé API compromise, réponse incident, rotation secrets, Secret Scanning"
 category: "Cybersécurité"
 publishedAt: "2026-10-28"
-sourceName: "GitHub Changelog — monitoring public"
-sourceUrl: "https://github.blog/changelog/label/application-security/"
-excerpt: "Un secret publié dans un dépôt public exige une réponse rapide : révocation, investigation, nettoyage et prévention."
+sourceName: "GitHub Docs — Removing sensitive data"
+sourceUrl: "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository"
+excerpt: "Lorsqu’une clé API est publiée dans un dépôt, il faut d’abord la révoquer ou la faire tourner. Supprimer le texte du dernier commit ne rend pas le secret inutilisable et n’efface pas toutes ses copies."
 takeaways:
-  - "révoquer, examiner les journaux, nettoyer et prévenir la récidive"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "Révoquer ou renouveler le secret chez le fournisseur avant de nettoyer l’historique."
+  - "Rechercher les usages anormaux et les copies dans les logs, artefacts, forks et environnements."
+  - "Nettoyer l’historique seulement après containment et coordination avec les collaborateurs."
 ---
 
-## Ce qu’il faut savoir
+## Priorité immédiate : invalider le secret
 
-Un secret publié dans un dépôt public exige une réponse rapide : révocation, investigation, nettoyage et prévention. La référence principale est **GitHub Changelog — monitoring public**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
+Si une clé API, un jeton ou un mot de passe a été publié dans un dépôt accessible à des personnes non autorisées, considérez-le comme compromis. La première mesure est de révoquer ou renouveler le secret chez le fournisseur, puis de vérifier que la nouvelle valeur n’est pas réintroduite dans le code ou les journaux.
 
-## Pourquoi c’est important
+Supprimer la ligne dans un nouveau commit ne suffit pas. Le secret peut rester dans l’historique Git, les clones, les forks, les caches, les artefacts CI, les captures d’écran ou les logs.
 
-Le point central est réponse à une fuite de secret dans un dépôt public. Les équipes doivent identifier le périmètre, attribuer un responsable et choisir des contrôles vérifiables. Une recommandation générale ne remplace pas l’évaluation des actifs et des contraintes métier.
+## Procédure de réponse
 
-## Actions recommandées
+**1. Contenir.** Révoquez le secret, désactivez l’identité si nécessaire et remplacez-le par un identifiant à portée limitée. Si la clé est utilisée par un service critique, planifiez la rotation de manière à éviter une panne tout en réduisant la fenêtre d’exposition.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre des systèmes, données ou processus concernés.
-- Appliquer la mesure adaptée : révoquer, examiner les journaux, nettoyer et prévenir la récidive.
-- Tester dans un environnement représentatif avant généralisation.
-- Documenter la décision, les exceptions et les résultats.
+**2. Déterminer le périmètre.** Identifiez le fournisseur, les permissions de la clé, la période d’exposition, les dépôts concernés et les systèmes qui l’utilisaient. Recherchez les commits, branches, forks, workflows, artefacts et journaux où la valeur peut apparaître.
 
-## Points de vigilance
+**3. Examiner les usages.** Consultez les journaux d’audit et l’activité du fournisseur pour repérer des requêtes inhabituelles, des adresses inattendues ou des changements de configuration. Conservez les éléments nécessaires à l’enquête avant de nettoyer l’historique.
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
+**4. Nettoyer les copies.** Suivez la procédure officielle pour réécrire l’historique si nécessaire. Coordonnez-vous avec les collaborateurs, car les clones existants peuvent réintroduire les anciens commits. La réécriture ne remplace jamais la révocation.
 
-## Conclusion
+**5. Corriger la cause.** Déplacez les secrets vers un gestionnaire dédié, limitez les permissions, ajoutez la détection de secrets et la protection au push, puis vérifiez que les logs n’impriment pas les valeurs.
 
-La sécurité s’améliore lorsque les principes deviennent des contrôles mesurables et régulièrement vérifiés.
+**6. Documenter et vérifier.** Notez l’heure de découverte, l’heure de révocation, le périmètre, les actions et les résultats. Vérifiez que l’ancien secret échoue et que le nouveau est accessible uniquement aux services prévus.
+
+## Quand considérer l’incident comme contenu
+
+La suppression du texte du dépôt n’est pas un critère de clôture. L’incident peut être considéré comme contenu lorsque l’ancien secret est invalide, les usages anormaux ont été évalués, les copies identifiées ont été traitées autant que possible et la cause de l’exposition a été corrigée. Si des indices d’abus existent, suivez le processus de réponse à incident de l’organisation.
+
+## Prévention
+
+Activez Secret Scanning et push protection lorsqu’ils sont disponibles, appliquez le moindre privilège aux jetons, utilisez des identifiants courts pour l’automatisation et évitez de partager les mêmes secrets entre environnements. Testez périodiquement la procédure de rotation.
+
+## À retenir
+
+L’ordre des opérations est important : révoquer, enquêter, nettoyer, corriger et vérifier. Un commit de suppression ne neutralise pas une clé qui a déjà été copiée.
 
 ## Source primaire
 
-Consultez [GitHub Changelog — monitoring public](https://github.blog/changelog/label/application-security/) pour les détails et mises à jour.
+[GitHub Docs — Removing sensitive data from a repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
