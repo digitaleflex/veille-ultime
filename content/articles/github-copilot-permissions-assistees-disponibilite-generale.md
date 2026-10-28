@@ -7,7 +7,7 @@ keywords: "GitHub Copilot, permissions assistées, agent IA, sécurité terminal
 category: "Intelligence artificielle & cybersécurité"
 publishedAt: "2026-10-26"
 sourceName: "GitHub Changelog"
-sourceUrl: "https://github.blog/changelog/month/10-2026/"
+sourceUrl: "https://github.blog/changelog/2026-10-26-github-copilot-assisted-permissions-generally-available/"
 excerpt: "Les permissions assistées demandent une autorisation lors de certaines actions de Copilot. Elles ne remplacent pas un environnement isolé, des droits limités et une revue des commandes."
 takeaways:
   - "Lire précisément l’action et le périmètre avant d’autoriser un outil."
@@ -49,4 +49,4 @@ Les permissions assistées rendent les demandes d’action plus visibles, mais l
 
 ## Source primaire
 
-[GitHub Changelog — annonce des permissions assistées de Copilot, octobre 2026](https://github.blog/changelog/month/10-2026/)
+[GitHub Changelog — annonce des permissions assistées de Copilot, octobre 2026](https://github.blog/changelog/2026-10-26-github-copilot-assisted-permissions-generally-available/)
