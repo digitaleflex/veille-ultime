@@ -183,19 +183,19 @@ import { join } from "node:path";
 
 function parseMarkdownArticle(fileName: string): EditorialArticle | null {
   const raw = readFileSync(join(process.cwd(), "content/articles", fileName), "utf8");
-  const match = raw.match(/^---\\s*\\r?\\n([\\s\\S]*?)\\r?\\n---\\s*\\r?\\n([\\s\\S]*)$/);
+  const match = raw.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n([\s\S]*)$/);
   if (!match) return null;
 
   const metadata: Record<string, string | string[]> = {};
   let currentListKey = "";
-  for (const line of match[1].split(/\\r?\\n/)) {
-    const listItem = line.match(/^\\s+-\\s+(.+)$/);
+  for (const line of match[1].split(/\r?\n/)) {
+    const listItem = line.match(/^\s+-\s+(.+)$/);
     if (listItem && currentListKey) {
       const value = metadata[currentListKey];
       if (Array.isArray(value)) value.push(listItem[1].trim().replace(/^["']|["']$/g, ""));
       continue;
     }
-    const field = line.match(/^([a-zA-Z][\\w]*):\\s*(.*)$/);
+    const field = line.match(/^([a-zA-Z][\w]*):\s*(.*)$/);
     if (!field) continue;
     currentListKey = field[1];
     const value = field[2].trim();
@@ -205,9 +205,9 @@ function parseMarkdownArticle(fileName: string): EditorialArticle | null {
 
   const required = ["slug", "title", "category", "publishedAt", "sourceName", "sourceUrl", "excerpt"];
   if (required.some((key) => typeof metadata[key] !== "string" || !metadata[key])) return null;
-  const body = match[2].trim().split(/\\r?\\n\\s*\\r?\\n/).map((block) => block.trim()).filter(Boolean);
+  const body = match[2].trim().split(/\r?\n\s*\r?\n/).map((block) => block.trim()).filter(Boolean);
   const takeaways = Array.isArray(metadata.takeaways) ? metadata.takeaways : [];
-  const wordCount = match[2].split(/\\s+/).filter(Boolean).length;
+  const wordCount = match[2].split(/\s+/).filter(Boolean).length;
   return {
     slug: metadata.slug as string,
     title: metadata.title as string,
@@ -235,9 +235,10 @@ function loadMarkdownArticles(): EditorialArticle[] {
 }
 
 // Les articles historiques restent compatibles pendant la migration progressive vers Markdown.
+const markdownArticles = loadMarkdownArticles();
 export const editorialArticles: EditorialArticle[] = [
-  ...loadMarkdownArticles(),
-  ...legacyArticles.filter((legacy) => !loadMarkdownArticles().some((article) => article.slug === legacy.slug)),
+  ...markdownArticles,
+  ...legacyArticles.filter((legacy) => !markdownArticles.some((article) => article.slug === legacy.slug)),
 ].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
 export const getArticleBySlug = (slug: string) => editorialArticles.find((article) => article.slug === slug);
