@@ -24,6 +24,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const article = getArticleBySlug(slug);
   if (!article) notFound();
 
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://veille-ultime.vercel.app").replace(/\/$/, "");
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    inLanguage: "fr-FR",
+    mainEntityOfPage: `${baseUrl}/actualites/${article.slug}`,
+    publisher: { "@type": "Organization", name: "Veille Ultime", url: baseUrl },
+    author: { "@type": "Organization", name: "Veille Ultime" },
+  };
+
   return (
     <main className="container" style={{ paddingTop: 48, paddingBottom: 80, minHeight: "70vh", maxWidth: 980 }}>\n      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c") }} />
       <Link href="/actualites" className="text-link" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 34 }}><ArrowLeft size={14} /> Toutes les actualités</Link>
