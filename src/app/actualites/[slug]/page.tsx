@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { editorialArticles, getArticleBySlug } from "@/lib/editorial-content";
-import type { Metadata, ReactNode } from "react";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
