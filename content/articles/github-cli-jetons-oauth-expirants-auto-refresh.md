@@ -1,43 +1,53 @@
 ---
 slug: "github-cli-jetons-oauth-expirants-auto-refresh"
-title: "GitHub CLI ajoute une option pour les jetons OAuth expirants et renouvelables"
-seoTitle: "GitHub CLI ajoute une option pour les jetons OAuth expi…"
-seoDescription: "GitHub annonce une option de la CLI pour des jetons OAuth expirants avec renouvellement automatique."
-keywords: "GitHub CLI OAuth token, jeton expirant, sécurité CI/CD"
-category: "Développement & sécurité"
+title: "GitHub CLI : préparer les intégrations aux jetons OAuth à durée limitée"
+seoTitle: "GitHub CLI et jetons OAuth expirants : checklist de migration"
+seoDescription: "GitHub CLI ajoute une option pour des jetons OAuth expirants avec renouvellement automatique. Vérifiez les scripts, sessions et intégrations avant activation."
+keywords: "GitHub CLI, OAuth, jetons expirants, refresh token, sécurité développeur"
+category: "Développement & cybersécurité"
 publishedAt: "2026-10-21"
-sourceName: "GitHub Changelog — sécurité applicative"
-sourceUrl: "https://github.blog/changelog/label/application-security/"
-excerpt: "GitHub annonce une option de la CLI pour des jetons OAuth expirants avec renouvellement automatique."
+sourceName: "GitHub Changelog"
+sourceUrl: "https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens/"
+excerpt: "L’option de jetons OAuth expirants avec renouvellement automatique réduit la durée de vie des identifiants, mais peut affecter les scripts et environnements qui supposent des jetons statiques."
 takeaways:
-  - "vérifier scripts, permissions et gestion des erreurs d’authentification"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "Inventorier les scripts qui utilisent gh auth token ou lisent directement les jetons."
+  - "Tester le renouvellement dans les environnements interactifs et automatisés."
+  - "Ne jamais contourner l’expiration en stockant le jeton dans un fichier partagé."
 ---
 
-## Ce qu’il faut savoir
+## Ce qui change
 
-GitHub annonce une option de la CLI pour des jetons OAuth expirants avec renouvellement automatique. La référence principale est **GitHub Changelog — sécurité applicative**. Les versions et conditions de disponibilité peuvent évoluer; vérifiez la publication originale avant toute décision opérationnelle.
+Le changelog GitHub du 21 octobre 2026 décrit une option de GitHub CLI permettant d’utiliser des jetons OAuth qui expirent et se renouvellent automatiquement. Le modèle réduit la durée de vie d’un jeton utilisable en cas de fuite, mais introduit une dépendance au mécanisme de renouvellement et à la session d’authentification.
 
-## Pourquoi c’est important
+Vérifiez la version de GitHub CLI, le statut de disponibilité de l’option et les instructions officielles avant de l’activer à grande échelle. Une fonctionnalité opt-in ne doit pas être supposée active par défaut.
 
-Le point central est option de jetons OAuth expirants avec renouvellement automatique. L’enjeu consiste à identifier les systèmes ou processus concernés et à traduire l’information en une décision vérifiable. Une annonce ne prouve pas à elle seule qu’un environnement particulier est affecté : l’inventaire local et la documentation technique restent nécessaires.
+## Quels environnements tester
 
-## Actions recommandées
+- Les postes développeurs avec authentification interactive.
+- Les scripts qui appellent GitHub CLI et récupèrent un jeton pour une autre commande.
+- Les runners CI et tâches planifiées qui dépendent d’une session locale.
+- Les conteneurs éphémères, machines de build et environnements sans interface.
+- Les outils internes qui supposent qu’un jeton reste valide pendant toute une exécution.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre : versions, services, dépôts ou intégrations concernés.
-- Appliquer la mesure adaptée : vérifier scripts, permissions et gestion des erreurs d’authentification.
-- Tester avant généralisation et prévoir un retour arrière pour les changements à risque.
-- Conserver une trace de la décision et des vérifications.
+Le renouvellement automatique ne signifie pas que tous les usages d’un jeton exporté bénéficieront du renouvellement. Un script qui copie une valeur dans une variable d’environnement peut continuer à utiliser une valeur expirée.
 
-## Limites et points de vigilance
+## Plan de migration
 
-Les annonces d’un éditeur décrivent son produit ou ses recommandations; elles ne constituent pas nécessairement une évaluation indépendante. Évitez de conclure à une compromission ou à une absence de risque sans éléments vérifiables.
+1. Mettre à jour GitHub CLI dans un environnement de test et lire la documentation associée à l’option.
+2. Rechercher les usages de jetons exportés, copiés ou stockés dans des fichiers.
+3. Préférer les mécanismes d’authentification dédiés aux workflows CI plutôt qu’une session personnelle persistante.
+4. Tester les commandes après expiration et renouvellement, y compris en cas de réseau indisponible ou de session révoquée.
+5. Documenter les comptes de service, les permissions et la procédure de rotation.
+6. Surveiller les erreurs d’authentification après activation et prévoir un retour arrière contrôlé.
 
-## Conclusion
+## Bonnes pratiques qui restent valables
 
-Reliez une source fiable à un contrôle concret et mesurable. Vérifiez l’effet de la mesure après sa mise en œuvre.
+Accordez uniquement les scopes nécessaires, séparez les identités humaines et automatisées, évitez les jetons longue durée et révoquez tout identifiant exposé. Le renouvellement automatique améliore le cycle de vie du jeton, mais ne compense pas des permissions excessives ni une machine compromise.
+
+## À retenir
+
+La durée de vie courte réduit la fenêtre d’exploitation d’un jeton volé, à condition que les clients et scripts gèrent correctement son renouvellement. Testez les usages non interactifs avant d’activer le changement dans les workflows critiques.
 
 ## Source primaire
 
-Consultez [GitHub Changelog — sécurité applicative](https://github.blog/changelog/label/application-security/) pour les détails et mises à jour.
+[GitHub CLI: opt in to expiring, auto-refreshing OAuth tokens — GitHub Changelog, 21 octobre 2026](https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens/)
