@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, AudioLines, Bot, Boxes, Braces, Clock3, ExternalLink, Globe2, RadioTower, ShieldAlert, ShieldCheck, Sparkles, Terminal } from "lucide-react";
+import { ArrowRight, AudioLines, Bot, Boxes, Braces, Clock3, ExternalLink, Globe2, RadioTower, ShieldAlert, ShieldCheck, Terminal } from "lucide-react";
 import { editorialArticles } from "@/lib/editorial-content";
 
 const categories = [
@@ -10,17 +10,16 @@ const categories = [
   { icon: Bot, title: "Intelligence artificielle", copy: "Modèles, agents, usages et sécurité de l'IA.", href: "/intelligence-artificielle" },
   { icon: Terminal, title: "Open source", copy: "Projets, mainteneurs et chaîne logicielle.", href: "/open-source" },
   { icon: Globe2, title: "Industrie tech", copy: "Entreprises, stratégies et tendances mondiales.", href: "/industrie-tech" },
-  { icon: AudioLines, title: "Bilans & analyses", copy: "Synthèses quotidiennes, hebdomadaires et mensuelles.", href: "/bilans" },
+  { icon: AudioLines, title: "Bilans & analyses", copy: "Vue d'ensemble du corpus réellement publié.", href: "/bilans" },
 ];
 
-const latest = editorialArticles.slice(0, 3).map((article) => ({
-  time: new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
-  category: article.category,
-  title: article.title,
-  description: article.excerpt,
-  label: "Sourcé",
-  kind: "watch",
-}));
+const latest = editorialArticles.slice(0, 4);
+const featured = latest[0];
+const categoryCount = new Set(editorialArticles.map((article) => article.category)).size;
+const latestDate = editorialArticles[0]?.publishedAt;
+const formattedLatestDate = latestDate
+  ? new Date(latestDate + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+  : "Aucune publication";
 
 export default function Home() {
   return (
@@ -32,7 +31,7 @@ export default function Home() {
           <nav className="nav" aria-label="Navigation principale">
             <Link href="/actualites">Actualités</Link><Link href="/cybersecurite">Cyber</Link><Link href="/vulnerabilites">CVE & alertes</Link><Link href="/bilans">Bilans</Link><Link href="/methodologie">Méthodologie</Link>
           </nav>
-          <div className="header-meta"><span className="live-dot" /> PLATEFORME EN INITIALISATION</div>
+          <div className="header-meta"><span className="live-dot" /> VEILLE ÉDITORIALE</div>
         </div>
       </header>
 
@@ -41,33 +40,32 @@ export default function Home() {
           <div className="container">
             <div className="eyebrow"><RadioTower size={14} /> Veille technologique indépendante</div>
             <h1>L’essentiel de la tech.<br /><span>Sans le bruit.</span></h1>
-            <p className="hero-copy">Cybersécurité, vulnérabilités, développement, cloud et IA : une veille structurée pour comprendre ce qui change, ce qui menace et ce qui compte vraiment.</p>
+            <p className="hero-copy">Cybersécurité, vulnérabilités, développement, cloud et IA : une veille structurée pour comprendre ce qui change, ce qui menace et ce qui compte vraiment. Chaque article renvoie vers sa source pour permettre la vérification.</p>
             <div className="hero-bottom">
               <Link href="/actualites" className="button-primary">Explorer la veille <ArrowRight size={15} /></Link>
-              <Link href="/methodologie" className="button-secondary">Notre méthodologie <ArrowDownRight size={14} /></Link>
+              <Link href="/methodologie" className="button-secondary">Notre méthodologie <ArrowRight size={14} /></Link>
             </div>
             <div className="stats">
-              <div className="stat"><strong>8 domaines</strong><span>Un panorama technologique organisé</span></div>
-              <div className="stat"><strong>Sources citées</strong><span>Traçabilité avant interprétation</span></div>
-              <div className="stat"><strong>3 rythmes</strong><span>Quotidien · hebdomadaire · mensuel</span></div>
+              <div className="stat"><strong>{editorialArticles.length} articles</strong><span>Publications présentes dans le dépôt</span></div>
+              <div className="stat"><strong>{categoryCount} catégories</strong><span>Catégories réellement utilisées</span></div>
+              <div className="stat"><strong>{formattedLatestDate}</strong><span>Date la plus récente du corpus</span></div>
             </div>
           </div>
         </section>
 
         <section className="content container">
-          <div className="section-head"><div><div className="section-kicker">Point de départ</div><h2 className="section-title">À surveiller</h2></div><span className="text-link">Architecture éditoriale en cours</span></div>
-          <div className="main-grid">
+          <div className="section-head"><div><div className="section-kicker">Publication la plus récente</div><h2 className="section-title">À la une</h2></div><Link href="/actualites" className="text-link">Toutes les publications <ArrowRight size={12} style={{ display: "inline" }} /></Link></div>
+          {featured ? <div className="main-grid">
             <article className="feature-card">
-              <div><span className="pill"><Sparkles size={11} style={{ display: "inline", marginRight: 5 }} /> Ligne éditoriale</span><h3>Comprendre l’information, pas seulement la faire défiler.</h3><p className="card-copy">Chaque publication devra répondre à trois questions : que s’est-il passé, pourquoi est-ce important, et que faut-il vérifier ou faire ensuite ?</p></div>
-              <div className="card-footer"><span>VEILLE · CONTEXTE · IMPACT</span><span>01 / MÉTHODE</span></div>
+              <div><span className="pill">{featured.category}</span><h3><Link href={"/actualites/" + featured.slug}>{featured.title}</Link></h3><p className="card-copy">{featured.excerpt}</p><Link href={"/actualites/" + featured.slug} className="button-primary" style={{ marginTop: 12 }}>Lire l’article <ArrowRight size={14} /></Link></div>
+              <div className="card-footer"><span>DATE DE PUBLICATION</span><span>{formattedLatestDate}</span></div>
             </article>
             <div className="side-stack">
-              <article className="side-card"><div className="meta"><span className="category">01 / Sécurité</span><span>Priorité éditoriale</span></div><h3>Les vulnérabilités critiques méritent des sources, pas des suppositions.</h3><p>CVSS, produits affectés, correctifs et exploitation seront renseignés uniquement lorsque les références les confirment.</p></article>
-              <article className="side-card"><div className="meta"><span className="category">02 / Analyse</span><span>Contexte utile</span></div><h3>Des synthèses qui séparent les faits de l’interprétation.</h3><p>Les bilans mettront en avant les tendances et leur impact concret pour les équipes techniques.</p></article>
+              {latest.slice(1, 3).map((article) => <article className="side-card" key={article.slug}><div className="meta"><span className="category">{article.category}</span><span>{new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span></div><h3><Link href={"/actualites/" + article.slug}>{article.title}</Link></h3><p>{article.excerpt}</p></article>)}
             </div>
-          </div>
+          </div> : <div className="report-card"><h3>Aucun article publié</h3><p>Le corpus ne contient actuellement aucune publication exploitable.</p></div>}
 
-          <div className="section-head" style={{ marginTop: 38 }}><div><div className="section-kicker">Explorer par thème</div><h2 className="section-title">Les domaines de veille</h2></div><span className="text-link">8 rubriques</span></div>
+          <div className="section-head" style={{ marginTop: 38 }}><div><div className="section-kicker">Explorer par thème</div><h2 className="section-title">Les domaines de veille</h2></div><span className="text-link">{categories.length} rubriques</span></div>
           <div className="category-grid">
             {categories.map(({ icon: Icon, title, copy, href }) => <Link className="category-card" href={href} key={title}><span className="category-symbol"><Icon size={17} /></span><h3>{title}</h3><p>{copy}</p></Link>)}
           </div>
@@ -76,15 +74,15 @@ export default function Home() {
             <section>
               <div className="section-head"><div><div className="section-kicker">Flux éditorial</div><h2 className="section-title">Dernières publications</h2></div><Link href="/actualites" className="text-link">Voir tout <ArrowRight size={12} style={{ display: "inline" }} /></Link></div>
               <div className="article-list">
-                {latest.map((item) => <article className="article-row" key={item.title}><div className="article-time">{item.time}</div><div><div className="meta"><span className="category">{item.category}</span></div><h3>{item.title}</h3><p>{item.description}</p></div><span className={`severity ${item.kind === "high" ? "severity-high" : "severity-watch"}`}>{item.label}</span></article>)}
+                {latest.map((article) => <article className="article-row" key={article.slug}><div className="article-time">{new Date(article.publishedAt + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</div><div><div className="meta"><span className="category">{article.category}</span><span>{article.readingMinutes} min</span></div><h3><Link href={"/actualites/" + article.slug}>{article.title}</Link></h3><p>{article.excerpt}</p></div><span className="severity severity-watch">Source citée</span></article>)}
               </div>
             </section>
             <aside>
-              <div className="section-head"><div><div className="section-kicker">Lecture stratégique</div><h2 className="section-title">Bilans</h2></div></div>
-              <div className="report-card"><span className="pill"><Clock3 size={11} style={{ display: "inline", marginRight: 5 }} /> À venir</span><h3>Des synthèses utiles pour décider.</h3><p>Les rapports seront générés à partir des articles vérifiés de la période, avec liens vers les sources et méthode de classement explicitée.</p><div className="report-line"><span>Brief quotidien</span><span>À configurer</span></div><div className="report-line"><span>Récapitulatif hebdomadaire</span><span>À configurer</span></div><div className="report-line"><span>Bilan mensuel</span><span>À configurer</span></div><Link href="/bilans" className="button-secondary" style={{ marginTop: 12 }}>Découvrir les bilans <ArrowRight size={13} /></Link></div>
+              <div className="section-head"><div><div className="section-kicker">Transparence</div><h2 className="section-title">Repères du corpus</h2></div></div>
+              <div className="report-card"><span className="pill"><Clock3 size={11} style={{ display: "inline", marginRight: 5 }} /> Données du dépôt</span><h3>Des informations vérifiables.</h3><p>Les compteurs ci-dessous sont calculés à partir des articles présents dans le dépôt, pas d'estimations d'audience ou de collecte automatique.</p><div className="report-line"><span>Articles disponibles</span><strong>{editorialArticles.length}</strong></div><div className="report-line"><span>Catégories éditoriales</span><strong>{categoryCount}</strong></div><div className="report-line"><span>Dernière date publiée</span><strong>{latestDate ?? "—"}</strong></div><Link href="/sources" className="button-secondary" style={{ marginTop: 12 }}>Consulter les sources <ExternalLink size={13} /></Link></div>
             </aside>
           </div>
-          <div className="disclaimer"><strong style={{ color: "#c5f441" }}>État du projet — </strong>première sélection éditoriale publiée à partir de sources identifiées. La collecte automatique, la connexion à la base de données et le processus de validation éditoriale restent à finaliser.</div>
+          <div className="disclaimer"><strong style={{ color: "#c5f441" }}>Périmètre — </strong>cette version présente les articles effectivement versionnés dans le dépôt. Elle ne prétend pas effectuer une collecte automatique en temps réel. Les dates, résumés et liens doivent être vérifiés auprès des sources citées avant toute décision opérationnelle.</div>
         </section>
       </main>
       <footer className="footer"><div className="container footer-inner"><Link href="/" className="brand"><span className="brand-mark">V.</span><span>VEILLE <em>ULTIME</em></span></Link><span>Une information sourcée. Une analyse explicite. Pas de faits inventés.</span><Link href="/methodologie" className="text-link">Lire la méthodologie <ExternalLink size={11} style={{ display: "inline" }} /></Link></div></footer>
