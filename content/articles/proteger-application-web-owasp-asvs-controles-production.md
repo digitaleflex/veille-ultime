@@ -1,43 +1,55 @@
 ---
 slug: "proteger-application-web-owasp-asvs-controles-production"
-title: "Sécuriser une application web : contrôles à vérifier avant la production"
-seoTitle: "Sécuriser une application web : contrôles à vérifier av…"
-seoDescription: "Avant le déploiement, vérifiez authentification, autorisations, validation des entrées, sessions et dépendances à l’aide d’exigences testables."
-keywords: "sécurité application web, OWASP ASVS, authentification"
+title: "Sécuriser une application web : utiliser OWASP ASVS comme plan de vérification"
+seoTitle: "OWASP ASVS 5.0 : checklist de sécurité applicative"
+seoDescription: "Transformer les exigences OWASP ASVS en contrôles testables pour l’authentification, l’accès, la validation, les journaux et le déploiement."
+keywords: "OWASP ASVS 5.0, sécurité application web, contrôle d’accès, tests sécurité, OWASP"
 category: "Cybersécurité"
 publishedAt: "2026-10-28"
 sourceName: "OWASP — Application Security Verification Standard"
-sourceUrl: "https://owasp.org/www-project-application-security-verification-standard/"
-excerpt: "Avant le déploiement, vérifiez authentification, autorisations, validation des entrées, sessions et dépendances à l’aide d’exigences testables."
+sourceUrl: "https://asvs.owasp.org/"
+excerpt: "OWASP ASVS fournit des exigences vérifiables pour concevoir et tester les contrôles de sécurité d’une application web. Il complète une liste de risques par des critères de validation concrets."
 takeaways:
-  - "tester les autorisations côté serveur et les parcours sensibles"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "Choisir un niveau de vérification adapté au risque et au contexte de l’application."
+  - "Transformer les exigences en tests et preuves, pas en cases cochées sans vérification."
+  - "Épingler la version ASVS utilisée pour que les références restent stables."
 ---
 
-## Ce qu’il faut savoir
+## Du risque à des exigences testables
 
-Avant le déploiement, vérifiez authentification, autorisations, validation des entrées, sessions et dépendances à l’aide d’exigences testables. La référence principale est **OWASP — Application Security Verification Standard**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
+Le Top 10 OWASP sensibilise aux grandes catégories de risques; l’Application Security Verification Standard (ASVS) va plus loin en fournissant des exigences qui peuvent guider la conception, la revue et les tests. La version stable publiée est ASVS 5.0.0. Référencez explicitement la version utilisée, car les identifiants d’exigences peuvent évoluer.
 
-## Pourquoi c’est important
+ASVS n’est pas un scanner automatique ni une certification implicite. C’est un référentiel pour définir ce que l’équipe doit vérifier et comment démontrer que les contrôles fonctionnent.
 
-Le point central est cadre OWASP ASVS pour vérifier les exigences de sécurité. Les équipes doivent identifier le périmètre, attribuer un responsable et choisir des contrôles vérifiables. Une recommandation générale ne remplace pas l’évaluation des actifs et des contraintes métier.
+## Construire un périmètre réaliste
 
-## Actions recommandées
+Commencez par cartographier les données, les rôles, les frontières de confiance, les intégrations externes et les opérations sensibles. Choisissez ensuite le niveau de vérification approprié au risque, aux obligations contractuelles et à la sensibilité des données. Documentez les exigences retenues et les éventuelles exclusions.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre des systèmes, données ou processus concernés.
-- Appliquer la mesure adaptée : tester les autorisations côté serveur et les parcours sensibles.
-- Tester dans un environnement représentatif avant généralisation.
-- Documenter la décision, les exceptions et les résultats.
+## Domaines de contrôle essentiels
 
-## Points de vigilance
+**Authentification et sessions.** Vérifiez la politique de mot de passe ou d’authentification sans mot de passe, la protection contre les tentatives répétées, les cookies de session, la révocation et les parcours de récupération de compte.
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
+**Autorisation.** Testez l’accès à chaque ressource avec plusieurs rôles. Un identifiant difficile à deviner ne remplace pas un contrôle d’accès côté serveur. Ajoutez des tests pour les accès horizontaux et verticaux non autorisés.
 
-## Conclusion
+**Validation et encodage.** Validez les données selon le contexte et utilisez des requêtes paramétrées pour l’accès aux données. L’encodage doit être adapté au contexte de sortie; une validation générique ne suffit pas à prévenir toutes les injections.
 
-La sécurité s’améliore lorsque les principes deviennent des contrôles mesurables et régulièrement vérifiés.
+**Cryptographie et secrets.** Utilisez des bibliothèques maintenues, des configurations TLS modernes et un stockage de secrets adapté. N’implémentez pas vous-même des primitives cryptographiques.
 
-## Source primaire
+**Gestion des erreurs et journalisation.** Évitez de révéler des secrets ou détails internes dans les erreurs. Consignez les événements utiles à la détection et à l’investigation, sans enregistrer de mots de passe ou jetons.
 
-Consultez [OWASP — Application Security Verification Standard](https://owasp.org/www-project-application-security-verification-standard/) pour les détails et mises à jour.
+**Configuration et dépendances.** Supprimez les comptes par défaut, limitez les environnements de debug, contrôlez les dépendances et protégez le pipeline de livraison.
+
+## Faire de chaque exigence une preuve
+
+Pour chaque exigence, définissez un responsable, une méthode de test, le résultat attendu et la preuve conservée. Les tests peuvent être automatisés lorsqu’ils sont reproductibles, complétés par une revue manuelle pour les règles métier et les frontières de confiance.
+
+Intégrez les contrôles les plus importants dans la CI et gardez les tests plus lourds pour les étapes adaptées. Lorsqu’un contrôle échoue, créez un ticket avec un périmètre et une échéance plutôt que de masquer l’échec pour conserver un pipeline vert.
+
+## À retenir
+
+ASVS permet de passer d’une intention générale de sécurité à des critères de vérification précis. Sa valeur vient du périmètre adapté, des tests reproductibles et de la preuve que les contrôles fonctionnent réellement.
+
+## Sources primaires
+
+- [OWASP Application Security Verification Standard](https://asvs.owasp.org/)
+- [OWASP Top 10:2025](https://owasp.org/projects/top-ten)
