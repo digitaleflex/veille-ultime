@@ -1,43 +1,62 @@
 ---
 slug: "sauvegardes-restauration-testee-resilience-entreprise"
-title: "Sauvegardes : pourquoi le test de restauration est aussi important que la copie"
-seoTitle: "Sauvegardes : pourquoi le test de restauration est auss…"
-seoDescription: "Une sauvegarde non testée peut être inutilisable pendant un incident. Protégez les copies et répétez les restaurations."
-keywords: "sauvegarde, test restauration, ransomware, PRA"
+title: "Sauvegardes : pourquoi une restauration testée vaut mieux qu’un simple statut vert"
+seoTitle: "Sauvegarde et restauration : checklist de résilience informatique"
+seoDescription: "Définir RPO et RTO, protéger les copies, tester la restauration et documenter la reprise pour réduire l’impact d’une panne ou d’un rançongiciel."
+keywords: "sauvegarde, restauration, RPO, RTO, ransomware, résilience informatique"
 category: "Cloud & DevOps"
 publishedAt: "2026-10-28"
-sourceName: "CISA — Stop Ransomware"
-sourceUrl: "https://www.cisa.gov/stopransomware"
-excerpt: "Une sauvegarde non testée peut être inutilisable pendant un incident. Protégez les copies et répétez les restaurations."
+sourceName: "CISA — StopRansomware Guide"
+sourceUrl: "https://www.cisa.gov/stopransomware/ransomware-guide"
+excerpt: "Une sauvegarde n’est utile que si elle est récupérable dans le délai requis. La résilience exige des copies protégées, des objectifs de reprise et des exercices de restauration réguliers."
 takeaways:
-  - "tester l’intégrité, mesurer RTO/RPO et protéger les copies"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "Définir un RPO et un RTO pour chaque service métier important."
+  - "Protéger au moins une copie contre la modification ou la suppression depuis l’environnement de production."
+  - "Tester la restauration de bout en bout et mesurer le temps réellement nécessaire."
 ---
 
-## Ce qu’il faut savoir
+## Une sauvegarde n’est pas une preuve de reprise
 
-Une sauvegarde non testée peut être inutilisable pendant un incident. Protégez les copies et répétez les restaurations. La référence principale est **CISA — Stop Ransomware**. Les recommandations doivent être vérifiées dans la documentation originale avant toute décision opérationnelle.
+Un tableau de bord peut indiquer que le dernier job de sauvegarde a réussi, sans prouver que les fichiers sont cohérents, que les clés sont disponibles ou que l’application peut redémarrer. Une copie peut aussi être supprimée par un compte compromis si elle partage les mêmes privilèges que la production.
 
-## Pourquoi c’est important
+La stratégie doit partir des besoins métier : quelle quantité de données peut être perdue et combien de temps le service peut rester indisponible?
 
-Le point central est bonnes pratiques de sauvegarde contre les rançongiciels. Les équipes doivent identifier le périmètre, attribuer un responsable et choisir des contrôles vérifiables. Une recommandation générale ne remplace pas l’évaluation des actifs et des contraintes métier.
+## Définir deux objectifs
 
-## Actions recommandées
+Le **RPO** (Recovery Point Objective) définit la perte de données maximale acceptable, exprimée comme un intervalle de temps. Le **RTO** (Recovery Time Objective) définit le délai cible pour rétablir le service. Ces objectifs peuvent varier selon les applications et doivent être validés avec les responsables métier.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre des systèmes, données ou processus concernés.
-- Appliquer la mesure adaptée : tester l’intégrité, mesurer RTO/RPO et protéger les copies.
-- Tester dans un environnement représentatif avant généralisation.
-- Documenter la décision, les exceptions et les résultats.
+Un service transactionnel critique peut nécessiter des sauvegardes plus fréquentes et une réplication, tandis qu’un site statique peut accepter une reprise plus simple. La réplication seule n’est pas une sauvegarde : une suppression ou une corruption peut se propager.
 
-## Points de vigilance
+## Concevoir des copies résistantes
 
-Les guides de bonnes pratiques ne sont pas des alertes datées et ne prouvent pas qu’un environnement est vulnérable. Adaptez les recommandations au contexte et vérifiez leur effet après mise en œuvre.
+- Séparer les identités et permissions de sauvegarde de celles de la production.
+- Protéger les copies contre la suppression ou la modification non autorisée, avec une isolation ou une immutabilité lorsque disponible.
+- Chiffrer les sauvegardes et protéger les clés indépendamment.
+- Conserver des copies dans un domaine de panne distinct adapté au risque.
+- Inclure bases de données, fichiers, configurations, secrets nécessaires à la reprise et procédures d’exploitation, sans copier inutilement des secrets périmés.
+- Documenter la rétention et vérifier que les exigences légales ou contractuelles sont respectées.
 
-## Conclusion
+## Tester la restauration, pas seulement le job
 
-La sécurité s’améliore lorsque les principes deviennent des contrôles mesurables et régulièrement vérifiés.
+Planifiez des exercices où une personne restaure réellement une sauvegarde dans un environnement isolé. Vérifiez l’intégrité des données, les migrations nécessaires, les accès, les dépendances externes et le comportement fonctionnel de l’application.
 
-## Source primaire
+Mesurez le temps entre le début de l’exercice et le retour à un service utilisable. Comparez-le au RTO et documentez les blocages : accès manquants, documentation obsolète, volume de données, clés indisponibles ou dépendances qui ne peuvent être restaurées.
 
-Consultez [CISA — Stop Ransomware](https://www.cisa.gov/stopransomware) pour les détails et mises à jour.
+Après un incident de sécurité, ne restaurez pas automatiquement sur un système qui pourrait encore être compromis. Identifiez la cause, assainissez l’environnement et validez les sauvegardes avant de réintroduire les données.
+
+## Checklist de validation
+
+- [ ] Les RPO/RTO sont documentés et approuvés par le métier.
+- [ ] Les sauvegardes sont chiffrées et les permissions sont séparées.
+- [ ] Une copie est protégée contre la suppression par un compte de production compromis.
+- [ ] Les restaurations sont testées à une fréquence définie.
+- [ ] Les résultats et temps de reprise sont consignés.
+- [ ] Les procédures sont accessibles même en cas d’indisponibilité du système principal.
+
+## À retenir
+
+La preuve de résilience est une restauration réussie et mesurée. Les sauvegardes doivent être protégées contre les mêmes scénarios qui pourraient détruire la production, puis testées comme une procédure opérationnelle.
+
+## Source de référence
+
+[CISA — StopRansomware Guide](https://www.cisa.gov/stopransomware/ransomware-guide)
