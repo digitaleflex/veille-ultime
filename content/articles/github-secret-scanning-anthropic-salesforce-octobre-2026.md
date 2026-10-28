@@ -1,43 +1,49 @@
 ---
 slug: "github-secret-scanning-anthropic-salesforce-octobre-2026"
-title: "GitHub étend la détection des secrets pour Anthropic et Salesforce"
-seoTitle: "GitHub étend la détection des secrets pour Anthropic et…"
-seoDescription: "Le changelog GitHub signale des changements au secret scanning, dont le blocage par défaut des clés Anthropic et la prise en charge de Salesforce."
-keywords: "GitHub secret scanning Anthropic Salesforce, fuite clé API"
+title: "GitHub élargit Secret Scanning : clés Anthropic, Salesforce et protection au push"
+seoTitle: "GitHub Secret Scanning : nouvelles clés Anthropic et Salesforce"
+seoDescription: "Le 13 octobre 2026, GitHub a ajouté des détecteurs Anthropic, Cloudsmith et Salesforce et activé par défaut la protection au push pour les nouveaux secrets Anthropic."
+keywords: "GitHub Secret Scanning, Anthropic API key, Salesforce, push protection, secrets"
 category: "Cybersécurité"
 publishedAt: "2026-10-13"
-sourceName: "GitHub Changelog — sécurité applicative"
-sourceUrl: "https://github.blog/changelog/label/application-security/"
-excerpt: "Le changelog GitHub signale des changements au secret scanning, dont le blocage par défaut des clés Anthropic et la prise en charge de Salesforce."
+sourceName: "GitHub Changelog"
+sourceUrl: "https://github.blog/changelog/2026-10-13-secret-scanning-blocks-anthropic-keys-by-default-adds-salesforce/"
+excerpt: "GitHub a ajouté de nouveaux types de secrets détectés, notamment des clés Anthropic et Cloudsmith, et intégré Salesforce au programme de partenariat de Secret Scanning."
 takeaways:
-  - "activer les protections et révoquer les secrets exposés"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "La protection au push bloque certains secrets avant qu’ils n’entrent dans l’historique du dépôt."
+  - "La détection ne remplace pas la rotation immédiate d’un secret exposé."
+  - "Vérifier les réglages, les types de secrets pris en charge et la couverture des dépôts."
 ---
 
-## Ce qu’il faut savoir
+## Ce qui change
 
-Le changelog GitHub signale des changements au secret scanning, dont le blocage par défaut des clés Anthropic et la prise en charge de Salesforce. La référence principale est **GitHub Changelog — sécurité applicative**. Les versions et conditions de disponibilité peuvent évoluer; vérifiez la publication originale avant toute décision opérationnelle.
+Dans son annonce du 13 octobre 2026, GitHub indique que Secret Scanning détecte de nouveaux types de secrets liés à Salesforce, Anthropic et Cloudsmith. Salesforce rejoint le programme de partenariat : lorsqu’un secret partenaire est détecté dans un dépôt public, GitHub peut transmettre l’information au fournisseur afin qu’il puisse révoquer ou renouveler l’identifiant.
 
-## Pourquoi c’est important
+Les nouveaux types cités sont notamment les clés de service et d’utilisateur Anthropic, une clé API Cloudsmith et un jeton OAuth2 API Marketing Cloud de Salesforce. GitHub indique également que la protection au push est activée par défaut pour les nouveaux types de secrets Anthropic dans les dépôts où Secret Scanning est activé.
 
-Le point central est détection des clés Anthropic et Salesforce. L’enjeu consiste à identifier les systèmes ou processus concernés et à traduire l’information en une décision vérifiable. Une annonce ne prouve pas à elle seule qu’un environnement particulier est affecté : l’inventaire local et la documentation technique restent nécessaires.
+## Pourquoi la protection au push compte
+
+Un secret commité peut être copié par des clones, des forks, des caches ou des automatisations avant même que le commit soit supprimé. La protection au push vise à bloquer certains identifiants avant qu’ils entrent dans l’historique distant. Elle réduit le risque d’exposition accidentelle, sans éliminer tous les scénarios : les secrets peuvent aussi apparaître dans des journaux, des artefacts CI, des tickets ou des images de conteneurs.
+
+Le périmètre exact dépend des fonctionnalités activées, du type de dépôt, des droits et du plan GitHub. Consultez la documentation actuelle de Secret Scanning plutôt que de supposer que tous les types sont disponibles partout.
 
 ## Actions recommandées
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre : versions, services, dépôts ou intégrations concernés.
-- Appliquer la mesure adaptée : activer les protections et révoquer les secrets exposés.
-- Tester avant généralisation et prévoir un retour arrière pour les changements à risque.
-- Conserver une trace de la décision et des vérifications.
+1. Vérifier que Secret Scanning et push protection sont activés sur les dépôts concernés.
+2. Examiner les alertes ouvertes et traiter en priorité les secrets actifs.
+3. En cas d’exposition confirmée, révoquer ou faire tourner le secret chez le fournisseur; supprimer la valeur du dépôt ne suffit pas.
+4. Rechercher les copies éventuelles dans l’historique, les forks, les logs CI, les artefacts et les environnements de déploiement.
+5. Déplacer les secrets vers un gestionnaire dédié ou le mécanisme de secrets du fournisseur CI.
+6. Tester le flux de push protection avec un faux secret de test, sans utiliser de véritable clé.
 
-## Limites et points de vigilance
+## Limites à connaître
 
-Les annonces d’un éditeur décrivent son produit ou ses recommandations; elles ne constituent pas nécessairement une évaluation indépendante. Évitez de conclure à une compromission ou à une absence de risque sans éléments vérifiables.
+Un détecteur peut ne pas reconnaître un format personnalisé ou une nouvelle variante. La couverture doit être complétée par des règles internes, des scans de dépôts et des contrôles sur les pipelines. Ne désactivez pas la protection uniquement pour faire passer un commit : utilisez le mécanisme d’exception prévu et documentez la justification.
 
-## Conclusion
+## À retenir
 
-Reliez une source fiable à un contrôle concret et mesurable. Vérifiez l’effet de la mesure après sa mise en œuvre.
+L’annonce améliore la couverture de détection et le blocage préventif de certains secrets. La mesure opérationnelle la plus importante reste un processus de gestion des secrets qui combine prévention, alertes, révocation rapide et vérification des copies.
 
 ## Source primaire
 
-Consultez [GitHub Changelog — sécurité applicative](https://github.blog/changelog/label/application-security/) pour les détails et mises à jour.
+[Secret scanning blocks Anthropic keys by default, adds Salesforce — GitHub Changelog, 13 octobre 2026](https://github.blog/changelog/2026-10-13-secret-scanning-blocks-anthropic-keys-by-default-adds-salesforce/)
