@@ -31,7 +31,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <p style={{ color: "var(--muted, #a1a1aa)", fontSize: 20, lineHeight: 1.75, maxWidth: 820 }}>{article.excerpt}</p>
       <div className="disclaimer" style={{ marginTop: 26 }}><strong style={{ color: "#c5f441" }}>Source principale — </strong><a href={article.sourceUrl} target="_blank" rel="noreferrer" className="text-link">{article.sourceName} <ExternalLink size={12} style={{ display: "inline" }} /></a></div>
       <article style={{ maxWidth: 780, marginTop: 40 }}>
-        {article.body.map((paragraph, index) => <p key={index} style={{ color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{paragraph}</p>)}
+        {article.body.map((block, index) => {
+          if (block.startsWith("## ")) return <h2 key={index} style={{ fontSize: 25, lineHeight: 1.3, margin: "30px 0 14px" }}>{block.slice(3)}</h2>;
+          if (block.split("\\n").every((line) => line.startsWith("- "))) return <ul key={index} style={{ paddingLeft: 22, color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{block.split("\\n").map((line) => <li key={line}>{line.slice(2)}</li>)}</ul>;
+          const parts = block.split(/(\\[[^\\]]+\\]\\(https?:\\/\\/[^)]+\\))/g);
+          return <p key={index} style={{ color: "var(--muted, #c4c4cc)", fontSize: 17, lineHeight: 1.9, marginBottom: 22 }}>{parts.map((part, partIndex) => { const link = part.match(/^\\[([^\\]]+)\\]\\((https?:\\/\\/[^)]+)\\)$/); return link ? <a key={partIndex} href={link[2]} target="_blank" rel="noreferrer" className="text-link">{link[1]}</a> : part; })}</p>;
+        })}
         <section className="report-card" style={{ marginTop: 34 }}><h2 style={{ fontSize: 22, marginBottom: 18 }}>À retenir</h2><ul style={{ paddingLeft: 20, color: "var(--muted, #a1a1aa)", lineHeight: 1.9 }}>{article.takeaways.map((item) => <li key={item} style={{ marginBottom: 8 }}>{item}</li>)}</ul></section>
         <p style={{ color: "var(--muted, #a1a1aa)", fontSize: 13, lineHeight: 1.7, marginTop: 28 }}>Article de synthèse rédigé à partir de la source citée. Les recommandations générales ne remplacent pas l’avis de sécurité du fournisseur ni la vérification de l’environnement concerné.</p>
         <Link href="/actualites" className="button-secondary" style={{ marginTop: 20 }}>Retour aux actualités <ArrowLeft size={13} /></Link>
