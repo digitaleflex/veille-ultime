@@ -1,43 +1,54 @@
 ---
 slug: "php-corrige-deux-failles-rce-critiques-octobre-2026"
-title: "PHP corrige deux failles critiques RCE : les versions à installer"
-seoTitle: "PHP corrige deux failles critiques RCE : les versions à…"
-seoDescription: "PHP a publié des correctifs pour deux vulnérabilités critiques pouvant permettre une exécution de code à distance sans authentification."
-keywords: "PHP, CVE-2026-109618, CVE-2026-109619, RCE"
+title: "PHP corrige deux vulnérabilités critiques RCE : versions et plan d’urgence"
+seoTitle: "PHP : deux failles RCE critiques corrigées en octobre 2026"
+seoDescription: "PHP a corrigé CVE-2026-109618 et CVE-2026-109619 dans les versions 8.5.12, 8.4.27, 8.3.36 et 8.2.35. Voici les actions prioritaires."
+keywords: "PHP sécurité, CVE-2026-109618, CVE-2026-109619, RCE, PHP-FPM, mod_php"
 category: "Cybersécurité"
 publishedAt: "2026-10-21"
-sourceName: "PHP.net — avis de sécurité"
+sourceName: "PHP.net — avis de sécurité officiel"
 sourceUrl: "https://www.php.net/archive/2026.php#2026-10-21-5"
-excerpt: "PHP a publié des correctifs pour deux vulnérabilités critiques pouvant permettre une exécution de code à distance sans authentification."
+excerpt: "Le 21 octobre 2026, PHP a publié des correctifs pour deux vulnérabilités critiques susceptibles de permettre une exécution de code à distance sans authentification. Le projet recommande une mise à jour immédiate."
 takeaways:
-  - "installer PHP 8.5.12, 8.4.27, 8.3.36 ou 8.2.35 selon la branche"
-  - "Vérifier les faits, les versions et les recommandations dans la source primaire."
+  - "Versions corrigées : PHP 8.5.12, 8.4.27, 8.3.36 et 8.2.35."
+  - "L’avis officiel précise qu’aucune mitigation complète ne remplace la mise à jour."
+  - "Vérifier les versions dans les conteneurs, les hébergements managés et les environnements Windows."
 ---
 
-## Ce qu’il faut savoir
+## L’alerte
 
-PHP a publié des correctifs pour deux vulnérabilités critiques pouvant permettre une exécution de code à distance sans authentification. La référence principale est **PHP.net — avis de sécurité**. Les versions et conditions de disponibilité peuvent évoluer; vérifiez la publication originale avant toute décision opérationnelle.
+Le 21 octobre 2026, l’équipe PHP a publié des correctifs pour **CVE-2026-109618** et **CVE-2026-109619**, deux vulnérabilités critiques susceptibles de permettre une exécution de code à distance sans authentification. L’avis officiel recommande de mettre à jour immédiatement et précise qu’aucune mesure de mitigation complète ne remplace le correctif.
 
-## Pourquoi c’est important
+Les versions corrigées annoncées sont PHP 8.5.12, 8.4.27, 8.3.36 et 8.2.35. Le projet signale un risque pour les installations servant des requêtes web, notamment PHP-FPM, Apache avec mod_php, php-cgi, FrankenPHP et LiteSpeed. Le niveau de risque dépend du mode d’intégration et de la configuration.
 
-Le point central est CVE-2026-109618 et CVE-2026-109619. L’enjeu consiste à identifier les systèmes ou processus concernés et à traduire l’information en une décision vérifiable. Une annonce ne prouve pas à elle seule qu’un environnement particulier est affecté : l’inventaire local et la documentation technique restent nécessaires.
+## Ce que décrivent les avis techniques
 
-## Actions recommandées
+- **CVE-2026-109618 — corruption liée à un échec mémoire :** un chemin de gestion d’erreur pouvait laisser des données internes de requête partiellement initialisées, ensuite utilisées pendant le nettoyage.
+- **CVE-2026-109619 — état global périmé :** un état interne associé à une requête pouvait subsister alors que la mémoire correspondante avait été libérée.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre : versions, services, dépôts ou intégrations concernés.
-- Appliquer la mesure adaptée : installer PHP 8.5.12, 8.4.27, 8.3.36 ou 8.2.35 selon la branche.
-- Tester avant généralisation et prévoir un retour arrière pour les changements à risque.
-- Conserver une trace de la décision et des vérifications.
+Ces résumés sont synthétiques. Les détails techniques et les mitigations limitées sont décrits dans les avis liés depuis le site PHP; consultez-les avant de modifier la configuration de production.
 
-## Limites et points de vigilance
+## Plan d’action prioritaire
 
-Les annonces d’un éditeur décrivent son produit ou ses recommandations; elles ne constituent pas nécessairement une évaluation indépendante. Évitez de conclure à une compromission ou à une absence de risque sans éléments vérifiables.
+**1. Inventorier le runtime réel.** Relevez la version exécutée par chaque service, pas seulement celle installée sur le poste de développement. Vérifiez PHP-FPM, Apache, les images de conteneurs, les tâches planifiées, les panneaux d’hébergement et les binaires Windows.
 
-## Conclusion
+**2. Appliquer la version corrigée.** Mettez à jour vers la version corrigée de la branche supportée. Si PHP est fourni par une distribution ou un hébergeur, vérifiez son avis et ses rétroportages plutôt que de comparer uniquement le numéro amont.
 
-Reliez une source fiable à un contrôle concret et mesurable. Vérifiez l’effet de la mesure après sa mise en œuvre.
+**3. Redémarrer et confirmer.** Redémarrez les workers concernés et vérifiez la version réellement chargée. Une mise à jour du paquet sans redémarrage peut laisser d’anciens processus actifs.
 
-## Source primaire
+**4. Encadrer les exceptions.** Si une mise à jour immédiate est impossible, documentez le responsable, le délai, l’exposition et les mesures temporaires explicitement proposées par l’avis officiel. Ne présentez pas ces mesures comme équivalentes au correctif.
 
-Consultez [PHP.net — avis de sécurité](https://www.php.net/archive/2026.php#2026-10-21-5) pour les détails et mises à jour.
+**5. Vérifier les indices d’incident.** Examinez les journaux web, applicatifs et système sur la période d’exposition. L’absence d’alerte ne prouve pas à elle seule qu’aucune exploitation n’a eu lieu.
+
+## Attention à PHP 8.2
+
+PHP 8.2 atteint sa fin de vie le 31 décembre 2026 et ne recevra ensuite plus de correctifs de sécurité du projet. Planifiez la migration vers une branche maintenue, avec tests de compatibilité et procédure de retour arrière.
+
+## À retenir
+
+Vérifiez chaque runtime PHP qui reçoit des requêtes, déployez la version corrigée adaptée et confirmez le redémarrage des processus. Les réglages temporaires ne doivent pas repousser indéfiniment la mise à jour.
+
+## Sources primaires
+
+- [PHP — avis de sécurité du 21 octobre 2026](https://www.php.net/archive/2026.php#2026-10-21-5)
+- [PHP — archive officielle des annonces 2026](https://www.php.net/archive/2026.php)
