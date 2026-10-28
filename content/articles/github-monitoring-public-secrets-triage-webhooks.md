@@ -7,7 +7,7 @@ keywords: "GitHub Public Monitoring, secrets exposés, triage, webhooks, sécuri
 category: "Cybersécurité"
 publishedAt: "2026-10-23"
 sourceName: "GitHub Changelog"
-sourceUrl: "https://github.blog/changelog/label/application-security/"
+sourceUrl: "https://github.blog/changelog/2026-10-23-public-monitoring-adds-triage-validity-api-and-webhooks/"
 excerpt: "Les améliorations de Public Monitoring ajoutent des capacités de triage et d’intégration. Elles aident à organiser le traitement, mais la révocation et l’enquête restent du ressort des équipes responsables."
 takeaways:
   - "Définir un processus de validation, de révocation et de clôture pour chaque alerte."
