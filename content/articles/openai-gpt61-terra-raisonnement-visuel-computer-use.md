@@ -1,43 +1,51 @@
 ---
 slug: "openai-gpt61-terra-raisonnement-visuel-computer-use"
-title: "GPT-6.1 Terra : raisonnement visuel et utilisation de l’ordinateur"
-seoTitle: "GPT-6.1 Terra : raisonnement visuel et utilisation de l…"
-seoDescription: "OpenAI présente GPT-6.1 Terra comme un modèle pour le raisonnement visuel, l’utilisation de l’ordinateur et la rédaction."
-keywords: "GPT-6.1 Terra, computer use, raisonnement visuel, modèle OpenAI"
+title: "GPT-6.1 Terra : évaluer le raisonnement visuel et l’usage d’ordinateur dans vos workflows"
+seoTitle: "GPT-6.1 Terra : raisonnement visuel, computer use et évaluation"
+seoDescription: "OpenAI présente GPT-6.1 Terra pour le raisonnement visuel et l’usage précis d’ordinateur. Évaluer la fiabilité, les permissions et les erreurs avant automatisation."
+keywords: "GPT-6.1 Terra, raisonnement visuel, computer use, agent IA, automatisation"
 category: "Intelligence artificielle"
 publishedAt: "2026-10-26"
-sourceName: "OpenAI — annonce produit"
-sourceUrl: "https://openai.com/news/product-releases/"
-excerpt: "OpenAI présente GPT-6.1 Terra comme un modèle pour le raisonnement visuel, l’utilisation de l’ordinateur et la rédaction."
+sourceName: "OpenAI API — changelog officiel"
+sourceUrl: "https://developers.openai.com/api/docs/changelog"
+excerpt: "Le changelog OpenAI présente GPT-6.1 Terra comme un modèle destiné au raisonnement visuel et à l’usage précis d’ordinateur. Les workflows agentiques exigent une évaluation des erreurs et des autorisations."
 takeaways:
-  - "tester dans un environnement contrôlé et limiter les permissions"
-  - "Vérifier les faits et recommandations dans la source primaire."
+  - "Tester sur des scénarios représentatifs, y compris les erreurs et les changements d’interface."
+  - "Limiter les droits et isoler les sessions qui peuvent agir sur des systèmes réels."
+  - "Exiger une confirmation humaine pour les actions sensibles ou irréversibles."
 ---
 
-## Ce qu’il faut savoir
+## Ce qui est annoncé
 
-OpenAI présente GPT-6.1 Terra comme un modèle pour le raisonnement visuel, l’utilisation de l’ordinateur et la rédaction. La référence principale est **OpenAI — annonce produit**. Les versions et conditions de disponibilité peuvent évoluer; vérifiez la publication originale avant toute décision opérationnelle.
+Le changelog de l’API OpenAI du 26 octobre 2026 annonce GPT-6.1 Terra et le présente comme un modèle efficace pour le raisonnement visuel, l’usage précis d’ordinateur et la rédaction naturelle. Cette formulation décrit l’orientation du fournisseur; elle ne constitue pas une garantie de réussite sur toutes les interfaces ou tâches.
 
-## Pourquoi c’est important
+L’usage d’un modèle capable d’interpréter une interface et d’interagir avec elle peut simplifier certaines automatisations, mais il ajoute des risques spécifiques : boutons déplacés, fenêtres inattendues, contenu trompeur, états partiels et actions difficiles à annuler.
 
-Le point central est capacités annoncées de raisonnement visuel et computer use. L’enjeu consiste à identifier les systèmes ou processus concernés et à traduire l’information en une décision vérifiable. Une annonce ne prouve pas à elle seule qu’un environnement particulier est affecté : l’inventaire local et la documentation technique restent nécessaires.
+## Définir un périmètre sûr
 
-## Actions recommandées
+Commencez par des tâches à faible impact et des comptes de test. Décrivez explicitement le résultat attendu, les actions autorisées et les conditions d’arrêt. L’agent ne doit pas pouvoir étendre seul son périmètre à des opérations financières, des suppressions ou des changements de sécurité.
 
-- Vérifier la source primaire et sa date.
-- Établir le périmètre : versions, services, dépôts ou intégrations concernés.
-- Appliquer la mesure adaptée : tester dans un environnement contrôlé et limiter les permissions.
-- Tester avant généralisation et prévoir un retour arrière pour les changements à risque.
-- Conserver une trace de la décision et des vérifications.
+Séparez l’identité utilisée par l’automatisation des comptes personnels. Accordez uniquement les droits nécessaires et évitez de laisser des sessions ouvertes vers des systèmes de production sans besoin clair.
 
-## Limites et points de vigilance
+## Évaluer la fiabilité
 
-Les annonces d’un éditeur décrivent son produit ou ses recommandations; elles ne constituent pas nécessairement une évaluation indépendante. Évitez de conclure à une compromission ou à une absence de risque sans éléments vérifiables.
+Construisez un jeu d’essai couvrant les parcours normaux, les erreurs de validation, les changements d’interface, les fenêtres modales, les délais, les pages lentes et les contenus inattendus. Pour chaque scénario, mesurez la réussite de bout en bout, les actions incorrectes, les reprises humaines, le temps, le coût et les cas où l’agent aurait dû s’arrêter.
 
-## Conclusion
+Répétez les tests après chaque changement d’interface ou de modèle. Une démonstration réussie sur un seul parcours ne permet pas d’estimer la fiabilité sur un processus complet.
 
-Reliez une source fiable à un contrôle concret et mesurable. Vérifiez l’effet de la mesure après sa mise en œuvre.
+## Contrôles avant mise en production
+
+- Utiliser un environnement isolé pour les essais.
+- Restreindre les domaines et applications accessibles.
+- Exiger une confirmation avant une action irréversible.
+- Journaliser les actions et résultats sans enregistrer de données sensibles inutiles.
+- Prévoir un arrêt d’urgence et une procédure de récupération.
+- Vérifier le résultat dans le système cible plutôt que de se fier uniquement à l’affirmation de réussite de l’agent.
+
+## À retenir
+
+Le raisonnement visuel et le computer use peuvent aider à automatiser des tâches répétitives, mais la fiabilité doit être mesurée sur le workflow complet. Les permissions, les critères d’arrêt et la vérification du résultat comptent autant que la capacité du modèle.
 
 ## Source primaire
 
-Consultez [OpenAI — annonce produit](https://openai.com/news/product-releases/) pour les détails et mises à jour.
+[OpenAI API — changelog officiel](https://developers.openai.com/api/docs/changelog)
